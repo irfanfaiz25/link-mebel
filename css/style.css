@@ -1,0 +1,353 @@
+
+/* styling text */
+body {
+  font: 400 15px/1.8 Lato, sans-serif;
+  color: #777;
+}
+
+h3, h4, h2 {
+  margin: 10px 0 10px 0;
+  letter-spacing: 10px;      
+  font-size: 3vmax;
+  color: #111;
+  font-weight: bold;
+}
+h5 {
+  margin: 5px 0 15px 0;
+  letter-spacing: 2px;      
+  font-size: 1vmax;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+}
+h6 {
+  letter-spacing: 2px;      
+  font-size: 1vmax;
+  color: #222222;
+  font-weight: 800;
+}
+.subj { 
+  letter-spacing: 2px;      
+  font-size: 18px;
+  color: #222222;
+  font-weight: 400;
+
+}
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+  background-color: #023047 !important;
+  color: #d5d5d5;
+  border-color: #8064A2;
+}
+
+.sub {
+  margin-bottom: 35px;
+}
+.container {
+  padding: 80px 100px;
+}
+.person {
+  border: 3px solid transparent;
+  margin-bottom: 10px;
+  width: 12vmax;
+  height: 12vmax;
+  opacity: 0.7;
+}
+.person:hover {
+  border-color: #bdbdbd;
+}
+.carousel-inner img {
+  width: 100%; 
+  margin: auto;
+  opacity: 0.7;
+}
+.bg-1 {
+  background-color: #d5bdaf;
+  color: #222222;
+}
+.bg-2 {
+  background-color: #e3d5ca;
+  color: #222222;
+}
+.bg-3 {
+  background-color: #f5ebe0;
+  color: #222222;
+}
+.bg-4 {
+  background-color: #d6ccc2;
+  color: #222222  ;
+}
+.bg-5 {
+  background-color: #edede9;
+  color: #222222  ;
+}
+.bg-6 {
+  background-color: #e5e5e5;
+  color: #222222  ;
+
+}
+.bg-1 h3 {
+  color: #fff;
+}
+.thumbnail {
+  padding: 0 0 15px 0;
+  border: none;
+  border-radius: 0;
+}
+.btns {
+  margin-left: 0px;
+  padding: 5px 15px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+  background-color: #ff0054 !important;
+  color: #f1f1f1 !important;
+  border-radius: 5;
+  transition: .2s;
+}
+.btns:hover, .btns:focus {
+  background-color: #d81159 !important;
+  color: #f1f1f1 !important;
+}
+h4{
+  color: #222222 !important;
+  text-align: center;
+  font-size: 2vmax;
+}
+.modal-header, .modal-body {
+  padding: 40px 50px;
+}
+.nav-tabs li a {
+  color: #777;
+}
+.navbar {
+  font-family: monospace;
+  margin-bottom: 0;
+  background-color: #023047 !important;
+  border: 0;
+  font-size: 15px !important;
+  letter-spacing: 4px;
+  opacity: 0.9;
+  font-weight: bold;
+  text-shadow: 0 0 7px #ffffff93;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.navbar-brand {
+  color: #ffffff !important;
+  padding-top: 0px;
+  padding-bottom: 25px;
+  font-size: 22px !important;
+  font-weight: normal !important;
+}
+.navbar-brand span{
+  color : #e63946;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 50px;
+}
+.navbar ul li a{
+  transition: all 0.8s;
+}
+.navbar li a, .navbar { 
+  color: #d5d5d5 !important;
+}
+.navbar-nav li a:hover {
+  color: #fff !important;
+}
+.navbar-nav li.active a {
+  color: #e63946 !important;
+  background-color: #023047 !important;
+}
+.navbar-default .navbar-toggle {
+  border-color: transparent;
+}
+.open .dropdown-toggle {
+  color: #e63946 !important;
+  background-color: #023047 !important;
+}
+.dropdown-menu li a {
+  font-weight: bold;
+  background-color: #f1f1f1 !important;
+  color: #000 !important;
+}
+.dropdown-menu li a:hover {
+  background-color: #d5d5d5 !important;
+  color: #222222 !important;
+}
+.dropdown-menu li.active a {
+  color: #222222 !important;
+  background-color: #5a5a5a !important;
+}
+
+footer {
+  background-color: #023047;
+  color: #f5f5f5;
+  padding: 32px;
+}
+footer a {
+  color: #f5f5f5;
+}
+footer a:hover {
+  color: #e63946 !important;
+  text-decoration: none;
+}
+textarea {
+  resize: none;
+}
+.carousel-control{
+  margin-bottom: 0px;
+}
+
+.div-header {
+  text-align: center;
+  padding-bottom: 70px;
+  
+}
+
+.div-header h2 {
+  color: #222222;
+}
+.panel-heading {
+  height: 55px;
+}
+.panel-heading, .panel-footer {
+  background-color: #023047b3;
+  border-radius: 5px;
+}
+.panel {
+  background-color: #d5d5d500;
+}
+.glyphicon {
+  color: #bdbdbd;
+}
+.glyphicon:hover {
+  color: #f1f1f1;
+}
+.equip2:hover, .equip3:hover, .equip4:hover, .equip:hover {
+  -ms-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2); 
+  transition: 0.5s;
+}
+.equip2 {
+  padding-top: 60px;
+  padding-bottom: 61px;
+}
+.equip3 {
+  padding-top: 29px;
+  padding-bottom: 0px;
+}
+/* halaman login */
+
+.login-dark {
+  height: 875px;
+  background-image: url(../image/1.jpg);
+  background-size:cover;
+  position:relative;
+}
+
+.login-dark form {
+  max-width:320px;
+  width:90%;
+  background-color:#023047e9;
+  padding:40px;
+  border-radius:4px;
+  transform:translate(-50%, -50%);
+  position:absolute;
+  top:50%;
+  left:50%;
+  color:#fff;
+  box-shadow:3px 3px 4px rgba(0,0,0,0.2);
+}
+
+.login-dark form .form-control {
+  background:none;
+  border:none;
+  border-bottom:1px solid #434a52;
+  border-radius:0;
+  box-shadow:none;
+  outline:none;
+  color:inherit;
+}
+
+.login-dark form .btn-primary {
+  background:#e63946;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top:26px;
+  text-shadow:none;
+  outline:none;
+  font-weight: 400;
+}
+
+.login-dark form .btn-primary:hover, .login-dark form .btn-primary:active {
+  background:#bdbdbd;
+  color: #222222;
+  font-weight: 400;
+  outline:none;
+}
+
+.login-dark form .btn-primary:active {
+  transform:translateY(1px);
+}
+.icon {
+  height: 80px;
+  width: 110px;
+  padding-bottom: 0px;
+}
+.jud {
+  letter-spacing: 4px;
+  color: #f5ebe0 !important;
+}
+.log {
+  color: #f5ebe0 !important;
+}
+
+/* form */
+
+/* tanggal */
+[type="date"] {
+  background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
+}
+[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+[type="time"]::-webkit-inner-spin-button {
+  display: none;
+}
+[type="time"]::-webkit-time-picker-indicator {
+  opacity: 0;
+}
+input {
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 3px 5px;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+  width: 190px;
+}
+.syarat {
+  margin-left: 0px;
+  padding-left: 0px;
+  line-height: 2.5;
+}
+.objj {
+  margin-left: 0px;
+  padding-left: 0px;
+  line-height: 2.5;
+}
+.center-block {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+
