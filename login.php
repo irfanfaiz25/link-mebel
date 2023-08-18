@@ -34,7 +34,6 @@ if (isset($_POST["login"])) {
     }
   }
   $error = true;
-
 }
 
 
@@ -60,31 +59,24 @@ if (isset($_POST["login"])) {
 
 <body>
 
-
-  <div class="login-dark text-center">
-    <form name="formlogin" action="" method="post">
-      <img src=" ./image/logo2.png" class="icon" alt="..."><br>
-      <p class="navbar-brand jud" style="padding: 0px 47px 0px;">Sabana<span>.</span>adv</p>
-      <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
-      <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
-      <?php if (isset($error)): ?>
-        <div class="alert alert-danger" role="alert">
-          Username atau password salah
-        </div>
-      <?php endif; ?>
-      <div class="form-group"><button class="btn btn-primary btn-block" type="submit" name="login">
-          <h6 class="log">LOGIN</h6>
-        </button></div>
-      <h6 style="color: antiquewhite; margin-top: 28px !important;">belum punya akun ? <a href="daftar.php"
-          style="color: #e63946 !important;">daftar</a></h6>
-  </div>
-
-  <footer class="text-center">
-    <div class="text-center p-3">
-      © 2022 Copyright:
-      <a class="text-white" href="#">sabanaadv.com</a>
+  <div class="login">
+    <div class="login-dark text-center">
+      <form name="formlogin" action="" method="post">
+        <img src="image/logo-meubel.png" class="icon" alt="..."><br>
+        <!-- <p class="navbar-brand jud" style="padding: 0px 47px 0px;">Sabana<span>.</span>adv</p> -->
+        <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
+        <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
+        <?php if (isset($error)) : ?>
+          <div class="alert alert-danger" role="alert">
+            Username atau password salah
+          </div>
+        <?php endif; ?>
+        <div class="form-group"><button class="btn btn-primary btn-block" type="submit" name="login">
+            <h6 class="log">LOGIN</h6>
+          </button></div>
+        <p style="margin-top: 28px !important;">belum punya akun ? <a href="daftar.php" style="color: #e63946 !important;">daftar</a></p>
     </div>
-  </footer>
+  </div>
 
   <script>
     function login() {

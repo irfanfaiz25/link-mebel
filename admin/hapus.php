@@ -4,13 +4,12 @@ require '../fungsi/fungsi.php';
 $id = $_GET["id"];
 
 if (hapus($id) > 0) {
-    header('Location: index.php');
+    header('Location: produk.php');
 } else {
     echo "
             <script>
                 alert('data tidak berhasil dihapus');
-                document.location.href = 'index.php';
+                document.location.href = 'produk.php';
             </script>
             ";
 }
-?>

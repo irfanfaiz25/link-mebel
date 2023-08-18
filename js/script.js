@@ -71,3 +71,83 @@ $(".input-number").keydown(function (e) {
             e.preventDefault();
         }
     });
+
+    
+    (function(){
+  // setup your carousels as you normally would using JS
+  // or via data attributes according to the documentation
+  // https://getbootstrap.com/javascript/#carousel
+  $('#carouselABC').carousel({ interval: 2500 });
+}());
+
+(function(){
+  $('.carousel-showmanymoveone .item').each(function(){
+    var itemToClone = $(this);
+
+    for (var i=1;i<4;i++) {
+      itemToClone = itemToClone.next();
+
+      // wrap around if at end of item collection
+      if (!itemToClone.length) {
+        itemToClone = $(this).siblings(':first');
+      }
+
+      // grab item, clone, add marker class, add to collection
+      itemToClone.children(':first-child').clone()
+        .addClass("cloneditem-"+(i))
+        .appendTo($(this));
+    }
+  });
+}());
+
+        $(document).ready(function() {
+            $('#tabel-barang').DataTable();
+        });
+
+         $('#tabel-barang').dataTable({
+            "pageLength": 5
+        });
+
+        var table = $('#tabel-barang').DataTable();
+
+        table
+            .order([0, 'asc'])
+            .draw();
+
+        $(document).ready(function() {
+            $('#tabel-order').DataTable();
+        });
+
+         $('#tabel-order').dataTable({
+            "pageLength": 5
+        });
+
+        var table = $('#tabel-order').DataTable();
+
+        table
+            .order([0, 'asc'])
+            .draw();
+
+        $(document).ready(function() {
+            $('#tabel-cart').DataTable();
+        });
+
+         $('#tabel-cart').dataTable({
+            "pageLength": 5
+        });
+
+        var table = $('#tabel-cart').DataTable();
+
+        table
+            .order([0, 'asc'])
+            .draw();
+
+            //open and close tab menu
+$('.nav-tabs-dropdown')
+    .on("click", "li:not('.active') a", function(event) {  
+        $(this).closest('ul').removeClass("open");
+    })
+    .on("click", "li.active a", function(event) {        
+        $(this).closest('ul').toggleClass("open");
+    });
+           

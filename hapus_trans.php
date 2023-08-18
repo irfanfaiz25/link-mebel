@@ -1,9 +1,9 @@
 <?php
 require 'fungsi/fungsi.php';
 
-$id_cart = $_GET["id_cart"];
+$no_trans = $_GET["no_trans"];
 
-if (hapusCart($id_cart) > 0) {
+if (hapusTrans($no_trans) > 0) {
     header('Location: index.php?#cart');
 } else {
     echo "

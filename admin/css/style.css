@@ -1,3 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&display=swap');
+
+#main-content {
+			transition: 0.4s;
+			/* height: 1800px !important; */
+			font-size: 80%;
+		}
+
+		body {
+			background-color: #eee;
+  			font-family: 'Karla', sans-serif !important;
+
+		}
+
+		.card-body {
+			color: #100F0F !important;
+		}
+
+		h1 {
+			color: #585858e9 !important;
+		}
+
+		.nav-link:hover {
+			background-color: #7B8FA1 !important;
+		}
+
+		.nav-link .fa {
+			transition: all 1s;
+		}
+
+		.nav-link:hover .fa {
+			transform: rotate(360deg);
+		}
+
+		.mar {
+			margin: 5px 10px 5px !important;
+			font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+		}
+
+		.margin-log {
+			margin-top: 280px !important;
+		}
+
+		.navbar-brand {
+			color: #ffffff !important;
+			padding-top: 0px;
+			padding-bottom: 0px;
+			font-size: 22px !important;
+			font-weight: normal !important;
+			font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+		}
+
+		.navbar-brand span {
+			color: #e63946;
+			font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+			font-size: 40px;
+		}
+
+		.btn-outline-secondary {
+			border-color: #8064A2 !important;
+		}
+
+		.btn-outline-secondary:hover {
+			background-color: #adb5bde9 !important;
+			color: antiquewhite !important;
+		}
+
+		.btn-outline-secondary:active {
+			background-color: #adb5bde9 !important;
+			color: antiquewhite !important;
+		}
+
+		.btn-outline-secondary:visited {
+			background-color: #adb5bde9 !important;
+			color: antiquewhite !important;
+		}
 li {
     list-style: none;
     margin: 25px 0 10px 0;
@@ -7,13 +83,35 @@ a {
     text-decoration: none;
 }
 
+h3, h4, h2 {
+  margin: 10px 0 10px 0;
+  letter-spacing: 10px;      
+  font-size: 3vmax;
+  color: #111;
+  font-weight: bold;
+}
+h5 {
+  margin: 5px 0 15px 0;
+  letter-spacing: 1px;      
+  font-size: 1.2vmax;
+  /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+}
+h6 {
+  letter-spacing: 1px;      
+  font-size: 1.5vmax;
+  color: #222222;
+  font-weight: 800;
+}
+
 .sidebar {
     width: 250px;
     height: 100vh;
     position: fixed;
     margin-left: -300px;
     transition: 0.4s;
-    background-color: #023047 !important;
+    background-color: #9da0a3e9 !important;
 }
 
 .mc {
@@ -67,3 +165,118 @@ a {
 .ic {
     padding-right: 20px;
 }
+
+a .active {
+    background-color: #4e4e4ee9;
+}
+
+i :not(.nav-col){
+	color: #ffffff;
+}
+
+.custom-card {
+  margin: 20px;
+  /* background: #705718; */
+  background: #eeaa23;
+/* background: linear-gradient(90deg, rgba(255,226,53,1) 0%, rgba(62,76,34,1) 27%); */
+  height: 130px;
+  width: 750px;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.custom-card-onprocess {
+  margin: 20px;
+  background: #013a63;
+  height: 130px;
+  width: 750px;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.custom-card-data {
+  margin: 20px;
+  background: #495057;
+  height: 130px;
+  width: 750px;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.onprocess-content {
+	margin-top: -13px;
+}
+
+.field-data {
+	margin-left: -60px;
+	margin-top: -5px;
+}
+
+.custom-card-content {
+  padding: 0 2rem 0 5rem;
+}
+
+.wait-image {
+  filter: drop-shadow(8px 8px 8px rgba(54, 54, 54, 0.621));
+  margin-left: -60px;
+}
+
+.wait-field {
+  padding-top: 10px;
+  text-align: left;
+}
+
+.field-modal {
+  text-align: right;
+}
+
+.wait-harga{
+  /* padding-top: 20px; */
+  font-size: 20px; 
+  text-align: right;
+}
+
+.card-no {
+  font-size: 20px; 
+}
+
+.wait-harga-modal{
+  padding-top: 20px;
+  font-size: 20px; 
+  text-align: right;
+}
+
+.btn-pay {
+  justify-content: end;
+}
+
+.wait-details {
+  padding-top: 15px;
+  text-align: right;
+}
+
+.payment {
+  margin-top: 20px;
+}
+
+.pembayaran {
+  margin-top: 10px;
+  margin-left: 3px;
+}
+
+.detail-card a {
+  text-decoration: none;
+}
+
+.detail-card {
+	margin-top: 10px;
+  text-align: end;
+}
+
+.payment-notes {
+  font-size: 15px;
+  text-align: end;
+}
+
+/* .bukti-modal */
+

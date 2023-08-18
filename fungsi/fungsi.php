@@ -1,6 +1,7 @@
 <?php
 
-$konek = mysqli_connect("localhost", "root", "", "db_sabana");
+$konek = mysqli_connect("localhost", "root", "", "db_mebel");
+date_default_timezone_set("Asia/Jakarta");
 
 function query($query)
 {
@@ -28,7 +29,7 @@ function tambah($data)
         return false;
     }
 
-    $input = "INSERT IGNORE INTO tb_barang VALUES ('','$nama','$harga','$stok','$ket','$kategori','$foto')";
+    $input = "INSERT IGNORE INTO tb_produk VALUES ('','$nama','$harga','$stok','$ket','$kategori','$foto')";
     mysqli_query($konek, $input);
 
     return mysqli_affected_rows($konek);
@@ -78,8 +79,52 @@ function upload()
 
     move_uploaded_file($tmpName, '../image/' . $namaFileBaru);
     return $namaFileBaru;
+}
 
+function uploadBukti($no_trans)
+{
+    $namaFile = $_FILES['foto']['name'];
+    $ukuran = $_FILES['foto']['size'];
+    $eror = $_FILES['foto']['error'];
+    $tmpName = $_FILES['foto']['tmp_name'];
 
+    if ($eror === 4) {
+        echo "
+                <script>
+                    alert('Pilih foto yang akan di upload');
+                </script>
+            ";
+        return false;
+    }
+
+    $valEkstensiFoto = ['jpg', 'jpeg', 'png'];
+    $ekstensiFoto = explode('.', $namaFile);
+    $ekstensiFoto = strtolower(end($ekstensiFoto));
+
+    if (!in_array($ekstensiFoto, $valEkstensiFoto)) {
+        echo "
+                <script>
+                    alert('Tidak ada file yang di ambil');
+                </script>
+            ";
+        return false;
+    }
+
+    if ($ukuran > 2000000) {
+        echo "
+                <script>
+                    alert('Tidak ada file yang di ambil');
+                </script>
+            ";
+        return false;
+    }
+
+    $namaFileBaru = $no_trans . "_" . date("Y-m-d H.i.s");
+    $namaFileBaru .= '.';
+    $namaFileBaru .= $ekstensiFoto;
+
+    move_uploaded_file($tmpName, 'image/bukti-pembayaran/' . $namaFileBaru);
+    return $namaFileBaru;
 }
 
 function ubah($data)
@@ -100,8 +145,8 @@ function ubah($data)
         $foto = upload();
     }
 
-    $edit = "UPDATE tb_barang SET nama='$nama', harga_sewa='$harga', 
-                stok='$stok', keterangan='$ket', kategori='$kategori', foto='$foto' WHERE id='$id'";
+    $edit = "UPDATE tb_produk SET nama='$nama', harga='$harga', 
+                stok='$stok', keterangan='$ket', kategori='$kategori', foto='$foto' WHERE id_produk='$id'";
     mysqli_query($konek, $edit);
 
     return mysqli_affected_rows($konek);
@@ -111,7 +156,7 @@ function hapus($id)
 {
     global $konek;
 
-    mysqli_query($konek, "DELETE FROM tb_barang WHERE id = $id");
+    mysqli_query($konek, "DELETE FROM tb_produk WHERE id_produk = $id");
 
     return mysqli_affected_rows($konek);
 }
@@ -120,7 +165,7 @@ function cariData($pencarian)
 {
     global $konek;
 
-    $query1 = "SELECT * FROM tb_barang WHERE id LIKE '%$pencarian%' OR nama LIKE '%$pencarian%' OR kategori LIKE '%$pencarian%'";
+    $query1 = "SELECT * FROM tb_produk WHERE id_produk LIKE '%$pencarian%' OR nama LIKE '%$pencarian%' OR kategori LIKE '%$pencarian%'";
 
     return query($query1);
 }
@@ -155,11 +200,11 @@ function addCart($id, $nm, $hrg, $ket, $foto, $jumlah)
     return mysqli_affected_rows($konek);
 }
 
-function hapusCart($id_rent)
+function hapusCart($id_cart)
 {
     global $konek;
 
-    $del = "DELETE FROM cart WHERE id_rent = $id_rent";
+    $del = "DELETE FROM cart WHERE id_cart = $id_cart";
     mysqli_query($konek, $del);
 
     return mysqli_affected_rows($konek);
@@ -205,45 +250,137 @@ function daftar($data)
 
 function checkout($data)
 {
-    // session_start();
     global $konek;
     $id_user = $_SESSION["user"];
+    $nama_penerima = $data["nama_penerima"];
+    $no_hp = $data["no_hp"];
+    $alamat = $data["alamat"];
+    $pembayaran = $data["pembayaran"];
+    // $notes = $data["notes"];
+
+    // membuat kode
+    $query = mysqli_query($konek, "SELECT max(no_trans) AS kodeTerbesar FROM transaksi_item");
+    $data = mysqli_fetch_array($query);
+    $kode_sample = $data['kodeTerbesar'];
+    $year_now = date("y");
+    $urutan = (int) substr($kode_sample, 4, 4);
+    $urutan++;
+    $huruf = "TR";
+    $kode_sample = $huruf . $year_now . sprintf("%04s", $urutan);
+    // kode selesai
 
     $co = query("SELECT * FROM cart WHERE id_user = $id_user");
 
     foreach ($co as $trans) {
-        $id_barang = $trans["id_barang"];
+        // $id_cart = $trans["id_cart"];
+        $id_produk = $trans["id_produk"];
         $nm_brg = $trans["nama"];
-        $harga = $trans["harga_sewa"];
+        $harga = $trans["harga"];
         $jumlah = $trans["jumlah"];
-        $ket = $trans["ket"];
-        $tgl_ambil = $data["tanggalambil"];
-        $tgl_kembali = $data["tanggalkembali"];
-        $selisih = strtotime($tgl_kembali) - strtotime($tgl_ambil);
-        $lama_sewa = $selisih / (24 * 60 * 60);
+        $foto = $trans["foto"];
+        $notes = $trans["ket"];
+        $tgl = date("Y-m-d H:i:s");
 
-        $query = "INSERT IGNORE INTO transaksi_item VALUES ('','$id_user','$id_barang','$nm_brg','$harga','$jumlah','$ket','$tgl_ambil','$tgl_kembali','$lama_sewa','online')";
+        $query = "INSERT IGNORE INTO transaksi_item VALUES ('$kode_sample','$id_user','$id_produk','$nm_brg','$harga','$jumlah','$notes','$foto','$tgl','$nama_penerima','$no_hp','$alamat','$pembayaran','waiting for payment','','','','')";
         mysqli_query($konek, $query);
-
-
     }
-    $result = mysqli_query($konek, "SELECT * FROM user WHERE id = '$id_user'");
-    $row = mysqli_fetch_assoc($result);
 
-    $jml_item = count(query("SELECT * FROM cart WHERE id_user = '$id_user' GROUP BY nama"));
-
-    $nm_user = $row["nama"];
-    $no_hp = $row["no_hp"];
-    $tot = $_SESSION["total"];
-    $total_sewa = $tot * $lama_sewa;
-    $tgl_ambil = $data["tanggalambil"];
-    $tgl_kembali = $data["tanggalkembali"];
-    $selisih = strtotime($tgl_kembali) - strtotime($tgl_ambil);
-    $lama_sewa = $selisih / (24 * 60 * 60);
-
-    $queryUser = "INSERT IGNORE INTO transaksi_user VALUES ('','$id_user','$nm_user','$no_hp','$tgl_ambil','$tgl_kembali','$jml_item','$total_sewa')";
-    mysqli_query($konek, $queryUser);
+    $del = "DELETE FROM cart WHERE id_user = '$id_user'";
+    mysqli_query($konek, $del);
 
     return mysqli_affected_rows($konek);
 }
-?>
+
+function hapusTrans($no_trans)
+{
+    global $konek;
+
+    $query = "DELETE FROM transaksi_item WHERE no_trans='$no_trans'";
+    mysqli_query($konek, $query);
+
+    return mysqli_affected_rows($konek);
+}
+
+function updatePayment($data)
+{
+    global $konek;
+
+    $no_trans = $data["no_trans"];
+
+    $foto = uploadBukti($no_trans);
+    if (!$foto) {
+        return false;
+    }
+
+    $query_cek = mysqli_query($konek, "SELECT * FROM transaksi_item WHERE no_trans='$no_trans'");
+    $cek_bukti = mysqli_fetch_assoc($query_cek);
+
+    if ($cek_bukti["bukti_bayar"] == "") {
+        $proses = "payment confirmation";
+    } else {
+        $proses = "repayment";
+    }
+
+    $query = "UPDATE transaksi_item SET bukti_bayar='$foto', proses_status='$proses' WHERE no_trans='$no_trans'";
+    mysqli_query($konek, $query);
+
+    return mysqli_affected_rows($konek);
+}
+
+function orderRejected($data)
+{
+    global $konek;
+
+    $no_trans = $data["no_trans"];
+    $ket_reject = $data["ket_reject"];
+
+    $query = "UPDATE transaksi_item SET proses_status='payment rejected',ket_reject='$ket_reject' WHERE no_trans='$no_trans'";
+    mysqli_query($konek, $query);
+
+    return mysqli_affected_rows($konek);
+}
+
+function orderAccepted($data)
+{
+    global $konek;
+
+    $no_trans = $data["no_trans"];
+
+    $query = "UPDATE transaksi_item SET proses_status='on process' WHERE no_trans='$no_trans'";
+    mysqli_query($konek, $query);
+
+    return mysqli_affected_rows($konek);
+}
+
+function addResi($data)
+{
+    global $konek;
+
+    $no_trans = $data["no_trans"];
+    $no_resi = $data["no_resi"];
+    $ekspedisi = $data["ekspedisi"];
+
+    $query = "UPDATE transaksi_item SET no_resi='$no_resi', ekspedisi='$ekspedisi', proses_status='on delivery' WHERE no_trans='$no_trans'";
+    mysqli_query($konek, $query);
+
+    return mysqli_affected_rows($konek);
+}
+
+function statusBadges($data)
+{
+    if ($data == "waiting for payment") {
+        $badges = '<span class="badge bg-secondary">' . $data . '</span>';
+    } elseif ($data == "payment confirmation") {
+        $badges = '<span class="badge bg-primary">' . $data . '</span>';
+    } elseif ($data == "payment rejected") {
+        $badges = '<span class="badge bg-danger">' . $data . '</span>';
+    } elseif ($data == "repayment") {
+        $badges = '<span class="badge bg-dark">' . $data . '</span>';
+    } elseif ($data == "on process") {
+        $badges = '<span class="badge bg-warning">' . $data . '</span>';
+    } elseif ($data == "on delivery") {
+        $badges = '<span class="badge bg-success">' . $data . '</span>';
+    }
+
+    return $badges;
+}
