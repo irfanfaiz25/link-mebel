@@ -151,3 +151,18 @@ $('.nav-tabs-dropdown')
         $(this).closest('ul').toggleClass("open");
     });
            
+    function copyToClipboard(select) {
+      const text = select;
+
+      navigator.clipboard.writeText(text).then(() => {
+        console.log("Text copied to clipboard");
+      }).catch((error) => {
+        console.error("Error copying text: ", error);
+      });
+    }
+
+    (function($){
+        $(window).on("load",function(){
+            $(".content").mCustomScrollbar();
+        });
+    })(jQuery);

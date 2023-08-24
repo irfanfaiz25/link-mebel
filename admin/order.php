@@ -30,16 +30,17 @@ include 'header.php';
                 <div class="col-md-12 table-responsive-md">
                     <table id="tabel-order" class="table table-bordered table-striped">
                         <thead class="table-warning">
-                            <tr>
-                                <th class="ctr">NO</th>
-                                <th class="ctr">NO TRANSAKSI</th>
-                                <th class="ctr">JUMLAH PRODUK</th>
-                                <th class="ctr">JUMLAH ITEM</th>
-                                <th class="ctr">TOTAL</th>
-                                <th class="ctr">STATUS</th>
-                                <th class="ctr">DETAIL</th>
-                                <th class="ctr">BUKTI</th>
-                                <th class="ctr">KONFIRMASI</th>
+                            <tr class="text-center">
+                                <th class="text-center">NO</th>
+                                <th class="text-center">NO TRANSAKSI</th>
+                                <th class="text-center">JUMLAH PRODUK</th>
+                                <th class="text-center">JUMLAH ITEM</th>
+                                <th class="text-center">TOTAL</th>
+                                <th class="text-center">TANGGAL ORDER</th>
+                                <th class="text-center">STATUS</th>
+                                <th class="text-center">DETAIL</th>
+                                <th class="text-center">BUKTI</th>
+                                <th class="text-center">KONFIRMASI</th>
                             </tr>
                         </thead>
 
@@ -62,6 +63,9 @@ include 'header.php';
                                 <td class="align-middle">
                                     IDR
                                     <?= number_format($row["total"]); ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= $row["tgl_transaksi"]; ?>
                                 </td>
                                 <td class="align-middle text-center">
                                     <?= statusBadges($row["proses_status"]); ?>

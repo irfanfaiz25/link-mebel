@@ -1,6 +1,11 @@
 <?php
 
-$konek = mysqli_connect("localhost", "root", "", "db_mebel");
+$db_server = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "db_mebel";
+$konek = mysqli_connect($db_server, $db_username, $db_password, $db_name);
+
 date_default_timezone_set("Asia/Jakarta");
 
 function query($query)
@@ -383,4 +388,16 @@ function statusBadges($data)
     }
 
     return $badges;
+}
+
+function orderDone($data)
+{
+    global $konek;
+
+    $no_trans = $data["no_trans"];
+
+    $query = "UPDATE transaksi_item SET proses_status='done' WHERE no_trans='$no_trans'";
+    mysqli_query($konek, $query);
+
+    return mysqli_affected_rows($konek);
 }

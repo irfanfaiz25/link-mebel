@@ -1,84 +1,6 @@
 <?php
-session_start();
-require 'fungsi/fungsi.php';
-if (isset($_SESSION["login"])) {
-  $ses_id = $_SESSION["user"];
-
-  $wait_confirm = query("SELECT no_trans, id_user, id_produk, nama, ket, foto, tgl_transaksi, pembayaran,SUM(jumlah) AS jumlah_order, SUM(harga*jumlah) AS total, COUNT(id_produk) AS jumlah_produk, bukti_bayar, nama_penerima, no_hp, alamat, ket_reject, proses_status FROM transaksi_item WHERE id_user='$ses_id' AND (proses_status='waiting for payment' OR proses_status='payment rejected' OR proses_status='payment confirmation' OR proses_status='repayment') GROUP BY no_trans ORDER BY no_trans DESC");
-
-  $on_process = query("SELECT no_trans, id_user, id_produk, nama, ket, foto, tgl_transaksi, pembayaran,SUM(jumlah) AS jumlah_order, SUM(harga*jumlah) AS total, COUNT(id_produk) AS jumlah_produk, bukti_bayar, nama_penerima, no_hp, alamat, ket_reject, proses_status, ekspedisi, no_resi FROM transaksi_item WHERE id_user='$ses_id' AND (proses_status='on process' OR proses_status='on delivery') GROUP BY no_trans ORDER BY no_trans DESC");
-}
-
-$meja = query("SELECT * FROM tb_produk WHERE kategori='Meja'");
-$kursi = query("SELECT * FROM tb_produk WHERE kategori='Kursi'");
-$slider = query("SELECT * FROM tb_produk ORDER BY id_produk LIMIT 6");
-
-if (isset($_POST["cart"])) {
-  // echo ($_POST["quant"][1]);
-  if (!isset($_SESSION["login"]) || !isset($_SESSION["user"])) {
-    echo "
-            <script>
-                alert('Silahkan login terlebih dahulu');
-            </script>
-        ";
-    header("Location: login.php");
-    return false;
-  }
-
-  if (
-    addCart(
-      $_POST["id_barang"],
-      $_POST["nm_barang"],
-      $_POST["harga_barang"],
-      $_POST["ket_barang"],
-      $_POST["foto_barang"],
-      $_POST["quant"][1]
-    ) > 0
-  ) {
-    header('Location: index.php#cart');
-  } else {
-    echo "
-      <script>
-        alert ('gagal');
-      </script>
-    ";
-    header('Location: index.php');
-  }
-}
-
-if (isset($_SESSION["user"])) {
-  $userId = $_SESSION["user"];
-
-  $cart = query("SELECT id_cart, nama, ket, foto, jumlah, harga*jumlah AS sub, SUM(jumlah) AS jml FROM cart WHERE id_user = $userId GROUP BY nama");
-  $cekCart = count(query("SELECT * FROM cart WHERE id_user = $userId"));
-  $tot = mysqli_query($konek, "SELECT SUM(harga*jumlah) AS tot FROM cart WHERE id_user = $userId");
-  $total = mysqli_fetch_assoc($tot);
-  $_SESSION["total"] = $total["tot"];
-}
-
-if (isset($_SESSION["total"])) {
-  $tot_sewa = $_SESSION["total"];
-} else {
-  $tot_sewa = "000";
-}
-
-if (isset($_POST["rent"])) {
-  if (checkout($_POST)) {
-    header('Location: index.php#cart');
-  }
-}
-
-if (isset($_POST["btn-payment"])) {
-  if (updatePayment($_POST)) {
-    header('Location: index.php#cart');
-  } else {
-    echo "
-      <script>
-        alert('gagal');
-      </script>
-    ";
-  }
-}
+include 'fungsi/fungsi.php';
+include 'fungsi-index.php';
 ?>
 
 <!DOCTYPE html>
@@ -140,7 +62,7 @@ if (isset($_POST["btn-payment"])) {
               <a class="dropdown-toggle" data-toggle="dropdown" href="#">KATEGORI
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#meja">Meja</a></li>
+                <li><a href="#meja">Lemari</a></li>
                 <li><a href="#kursi">Kursi</a></li>
               </ul>
             </li>
@@ -270,36 +192,36 @@ if (isset($_POST["btn-payment"])) {
     <div class="container">
 
       <div class="div-header text-center">
-        <h2>MEJA (Table)</h2>
+        <h2>LEMARI (Cup Board)</h2>
         <p class="subj"><i>we prepare your lovely house equipments &#10084;</i></p>
       </div>
 
-      <?php foreach ($meja as $rowmeja): ?>
+      <?php foreach ($lemari as $rowlemari): ?>
         <div class="col-sm-4" style="margin-bottom: 30px;">
           <div class="panel text-center">
-            <input type="hidden" name="id_barang" value="<?= $rowmeja["id_produk"]; ?>">
+            <input type="hidden" name="id_barang" value="<?= $rowlemari["id_produk"]; ?>">
             <div class="panel-heading">
               <h5>
-                <?= $rowmeja["nama"]; ?>
+                <?= $rowlemari["nama"]; ?>
               </h5>
             </div>
             <div class="panel-body" data-toggle="modal" data-target="#myModal"></div>
-            <img src="image/<?= $rowmeja["foto"]; ?>" class="img-responsive equip" width="300px" alt="Image">
+            <img src="image/<?= $rowlemari["foto"]; ?>" class="img-responsive equip" alt="Image">
             <div class="panel-footer">
               <h5>Harga</h5>
               <h5>
                 IDR
-                <?= number_format($rowmeja["harga"]); ?>
+                <?= number_format($rowlemari["harga"]); ?>
               </h5>
               <button class="btn btn-xs btn-default" data-toggle="modal"
-                data-target="#modalCart<?= $rowmeja["id_produk"]; ?>">
+                data-target="#modalCart<?= $rowlemari["id_produk"]; ?>">
                 <h6><i class="fa fa-cart-plus"></i>
                   ADD</h6>
               </button>
             </div>
 
             <!-- modal cart -->
-            <div class="modal fade" id="modalCart<?= $rowmeja["id_produk"]; ?>" tabindex="-1" role="dialog"
+            <div class="modal fade" id="modalCart<?= $rowlemari["id_produk"]; ?>" tabindex="-1" role="dialog"
               aria-labelledby="modalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -311,21 +233,21 @@ if (isset($_POST["btn-payment"])) {
                   </div>
                   <div class="modal-body">
                     <form action="" method="post">
-                      <input type="hidden" name="id_barang" value="<?= $rowmeja["id_produk"]; ?>">
-                      <input type="hidden" name="nm_barang" value="<?= $rowmeja["nama"]; ?>">
-                      <input type="hidden" name="harga_barang" value="<?= $rowmeja["harga"]; ?>">
-                      <input type="hidden" name="foto_barang" value="<?= $rowmeja["foto"]; ?>">
+                      <input type="hidden" name="id_barang" value="<?= $rowlemari["id_produk"]; ?>">
+                      <input type="hidden" name="nm_barang" value="<?= $rowlemari["nama"]; ?>">
+                      <input type="hidden" name="harga_barang" value="<?= $rowlemari["harga"]; ?>">
+                      <input type="hidden" name="foto_barang" value="<?= $rowlemari["foto"]; ?>">
                       <div class="row">
                         <div class="col-md-3">
-                          <img class="img-responsive" src="image/<?= $rowmeja["foto"]; ?>" alt="">
+                          <img class="img-responsive" src="image/<?= $rowlemari["foto"]; ?>" alt="">
                         </div>
                         <div class="col-md-8">
                           <p>
-                            <?= $rowmeja["nama"]; ?>
+                            <?= $rowlemari["nama"]; ?>
                           </p>
                           <p>
                             IDR
-                            <?= number_format($rowmeja["harga"]); ?>
+                            <?= number_format($rowlemari["harga"]); ?>
                           </p>
 
                           <!-- input min plus button -->
@@ -514,16 +436,24 @@ if (isset($_POST["btn-payment"])) {
           <ul class="nav nav-tabs nav-justified nav-tabs-dropdown" role="tablist">
             <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
                 data-toggle="tab">CART
-                <span class="badge">2</span>
+                <span class="badge">
+                  <?= $count_cart; ?>
+                </span>
               </a></li>
             <li role="presentation"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">PAYMENT
-                <span class="badge badge-warning">2</span>
+                <span class="badge badge-warning">
+                  <?= $count_payment; ?>
+                </span>
               </a></li>
             <li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">ON PROCESS
-                <span class="badge badge-success">2</span>
+                <span class="badge badge-success">
+                  <?= $count_process; ?>
+                </span>
               </a></li>
             <li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">HISTORY
-                <span class="badge badge-inverse">2</span>
+                <span class="badge badge-inverse">
+                  <?= $count_history; ?>
+                </span>
               </a></li>
           </ul>
 
@@ -708,541 +638,851 @@ if (isset($_POST["btn-payment"])) {
 
             <!-- tab payment order -->
             <div role="tabpanel" class="tab-pane" id="about">
-              <?php
-              if (isset($_SESSION["login"])):
-                foreach ($wait_confirm as $row):
-                  ?>
-                  <div class="card custom-card">
-                    <div class="custom-card-content">
-                      <div class="row">
-                        <div class="col-md-4 wait-field">
-                          <h5 class="card-no">
-                            <?= $row["no_trans"]; ?>
-                          </h5>
-                          <h5>Total</h5>
-                          <h5>
-                            <?= $row["jumlah_produk"] ?> Produk,
-                            <?= $row["jumlah_order"]; ?> Item
-                          </h5>
-                        </div>
-                        <div class="col-md-5 wait-field wait-ping">
-                          <?php
-                          if ($row["bukti_bayar"] == "" && $row["proses_status"] != "payment rejected"):
-                            ?>
-                            <div class="row">
-                              <div class="col-md-1">
-                                <div class="heartbeat"></div>
-                                <div class="dot"></div>
-                              </div>
-                              <div class="col-md-10">
-                                <span>
-                                  <h5 class="pay-delay">
-                                    menunggu pembayaran
-                                  </h5>
-                                </span>
-                              </div>
-                            </div>
-                          <?php elseif ($row["bukti_bayar"] != "" && $row["proses_status"] != "payment rejected"): ?>
-                            <div class="row">
-                              <div class="col-md-1">
-                                <div class="heartbeat-success"></div>
-                                <div class="dot-success"></div>
-                              </div>
-                              <div class="col-md-10">
-                                <span>
-                                  <h5 class="pay-confirm">
-                                    menunggu konfirmasi admin
-                                  </h5>
-                                </span>
-                              </div>
-                            </div>
-                          <?php elseif ($row["proses_status"] == "payment rejected"): ?>
-                            <div class="row">
-                              <div class="col-md-1">
-                                <div class="heartbeat-reject"></div>
-                                <div class="dot-reject"></div>
-                              </div>
-                              <div class="col-md-10">
-                                <span>
-                                  <h5 class="pay-reject">
-                                    order di tolak, silahkan cek keterangan dibawah
-                                  </h5>
-                                </span>
-                              </div>
-                              <div class="row text-center btn-check">
-                                <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
-                                  data-target="#ketReject<?= $row["no_trans"]; ?>"><strong>Check <i
-                                      class="fa fa-chevron-down"></i></strong></button>
-                              </div>
-                            </div>
-                          <?php endif; ?>
-                        </div>
-                        <div class="col-md-3 detail-card">
-                          <a href="" data-toggle="modal" data-target="#detailOrder<?= $row["no_trans"]; ?>">
-                            <h5 class="wait-details">
-                              details <i class="fa fa-chevron-right"></i>
+              <div class="longEnough mCustomScrollbar" data-mcs-theme="dark">
+
+                <?php
+                if (isset($_SESSION["login"])):
+                  foreach ($wait_confirm as $row):
+                    ?>
+                    <div class="card custom-card">
+                      <div class="custom-card-content">
+                        <div class="row">
+                          <div class="col-md-4 wait-field">
+                            <h5 class="card-no">
+                              <?= $row["no_trans"]; ?>
                             </h5>
-                          </a>
-                          <h5 class="wait-harga">
-                            IDR
-                            <?= number_format($row["total"]); ?>
-                          </h5>
-                          <a href="hapus_trans.php?no_trans=<?= $row["no_trans"]; ?>">
-                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                          </a>
-                          <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
-                            data-target="#pay<?= $row["no_trans"]; ?>"><strong>Pay</strong></button>
+                            <h5>Total</h5>
+                            <h5>
+                              <?= $row["jumlah_produk"] ?> Produk,
+                              <?= $row["jumlah_order"]; ?> Item
+                            </h5>
+                          </div>
+                          <div class="col-md-5 wait-field wait-ping">
+                            <?php
+                            if ($row["bukti_bayar"] == "" && $row["proses_status"] != "payment rejected"):
+                              ?>
+                              <div class="row">
+                                <div class="col-md-1">
+                                  <div class="heartbeat"></div>
+                                  <div class="dot"></div>
+                                </div>
+                                <div class="col-md-10">
+                                  <span>
+                                    <h5 class="pay-delay">
+                                      menunggu pembayaran
+                                    </h5>
+                                  </span>
+                                </div>
+                              </div>
+                            <?php elseif ($row["bukti_bayar"] != "" && $row["proses_status"] != "payment rejected"): ?>
+                              <div class="row">
+                                <div class="col-md-1">
+                                  <div class="heartbeat-success"></div>
+                                  <div class="dot-success"></div>
+                                </div>
+                                <div class="col-md-10">
+                                  <span>
+                                    <h5 class="pay-confirm">
+                                      menunggu konfirmasi admin
+                                    </h5>
+                                  </span>
+                                </div>
+                              </div>
+                            <?php elseif ($row["proses_status"] == "payment rejected"): ?>
+                              <div class="row">
+                                <div class="col-md-1">
+                                  <div class="heartbeat-reject"></div>
+                                  <div class="dot-reject"></div>
+                                </div>
+                                <div class="col-md-10">
+                                  <span>
+                                    <h5 class="pay-reject">
+                                      order di tolak, silahkan cek keterangan dibawah
+                                    </h5>
+                                  </span>
+                                </div>
+                                <div class="row text-center btn-check">
+                                  <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
+                                    data-target="#ketReject<?= $row["no_trans"]; ?>"><strong>Check <i
+                                        class="fa fa-chevron-down"></i></strong></button>
+                                </div>
+                              </div>
+                            <?php endif; ?>
+                          </div>
+                          <div class="col-md-3 detail-card">
+                            <a href="" data-toggle="modal" data-target="#detailOrder<?= $row["no_trans"]; ?>">
+                              <h5 class="wait-details">
+                                details <i class="fa fa-chevron-right"></i>
+                              </h5>
+                            </a>
+                            <h5 class="wait-harga">
+                              IDR
+                              <?= number_format($row["total"]); ?>
+                            </h5>
+                            <a href="hapus_trans.php?no_trans=<?= $row["no_trans"]; ?>">
+                              <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                            </a>
+                            <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
+                              data-target="#pay<?= $row["no_trans"]; ?>"><strong>Pay</strong></button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- modal detail orderan  -->
-                  <div class="modal fade" id="detailOrder<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
-                    aria-labelledby="modalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                          <p class="modal-title" id="modalLabel" style="font-size: 20px;">Detail Order</p>
-                        </div>
-                        <div class="modal-body">
-                          <div class="row">
-                            <div class="card custom-card-data">
-                              <div class="custom-card-content">
-                                <div class="row">
-                                  <div class="col-md-6 wait-field">
-                                    <h5 style="font-size: 26px;">
-                                      Data Pengiriman
-                                    </h5>
-                                    <h5>
-                                      Nama Penerima :
-                                      <?= $row["nama_penerima"]; ?>
-                                    </h5>
-                                    <h5>
-                                      No HP Penerima :
-                                      <?= $row["no_hp"]; ?>
-                                    </h5>
-                                  </div>
-                                  <div class="col-md-6">
-                                    <h5 class="wait-harga-modal col-alamat" style="font-size: 26px;">
-                                      Alamat Penerima :
-                                    </h5>
-                                    <h5 class="field-modal col-alamat">
-                                      <?= $row["alamat"]; ?>
-                                    </h5>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <?php
-                            $no_trans = $row["no_trans"];
-                            $detail = query("SELECT * FROM transaksi_item WHERE no_trans='$no_trans'");
-                            foreach ($detail as $data) {
-                              ?>
-                              <div class="card custom-card">
+                    <!-- modal detail orderan  -->
+                    <div class="modal fade" id="detailOrder<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="modal-title" id="modalLabel" style="font-size: 20px;">Detail Order</p>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="card custom-card-data">
                                 <div class="custom-card-content">
                                   <div class="row">
-                                    <div class="col-md-2">
-                                      <img src="image/<?= $data["foto"]; ?>" width="100" class="wait-image" alt="">
-                                    </div>
-                                    <div class="col-md-7 wait-field">
-                                      <h5>
-                                        <?= $data["no_trans"]; ?>
-                                      </h5>
+                                    <div class="col-md-6 wait-field">
                                       <h5 style="font-size: 26px;">
-                                        <?= $data["nama"]; ?>
+                                        Data Pengiriman
                                       </h5>
                                       <h5>
-                                        <?= $data["ket"]; ?>
+                                        Nama Penerima :
+                                        <?= $row["nama_penerima"]; ?>
+                                      </h5>
+                                      <h5>
+                                        No HP Penerima :
+                                        <?= $row["no_hp"]; ?>
                                       </h5>
                                     </div>
-                                    <div class="col-md-3">
-                                      <h5 class="wait-harga-modal">
-                                        IDR
-                                        <?= number_format($data["harga"]); ?>
+                                    <div class="col-md-6">
+                                      <h5 class="wait-harga-modal col-alamat" style="font-size: 26px;">
+                                        Alamat Penerima :
                                       </h5>
-                                      <h5 class="field-modal">Jumlah</h5>
-                                      <h5 class="field-modal">
-                                        <?= $data["jumlah"]; ?> Item
+                                      <h5 class="field-modal col-alamat">
+                                        <?= $row["alamat"]; ?>
                                       </h5>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                               <?php
-                            }
-                            ?>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- modal upload bukti bayar -->
-                  <div class="modal fade" id="pay<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
-                    aria-labelledby="modalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                          <p class="modal-title" id="modalLabel" style="font-size: 20px;">Payment</p>
-                        </div>
-                        <div class="modal-body">
-                          <form action="" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="no_trans" value="<?= $row["no_trans"]; ?>">
-                            <div class="row">
-                              <div class="col-md-4">
-                                <h6 style="font-size: 15px;">
-                                  Metode pembayaran :
-                                </h6>
-                                <img src="image/payment-logo/<?= $row["pembayaran"]; ?>.png" height="35" alt="payment">
-                              </div>
-                              <div class="col-md-8">
-                                <h6 class="payment-notes">Silahkan melakukan pemabayaran ke nomor/rekening tujuan
-                                  berikut :</h6>
-                                <h6 class="payment-notes">
-                                  <?php
-                                  if ($row["pembayaran"] != "bca") {
-                                    echo strtoupper($row["pembayaran"]) . " 085156963417 <br> a/n Nandang Budi";
-                                  } elseif ($row["pembayaran"] == "bca") {
-                                    echo "BCA 10123487 a/n Nandang Budi";
-                                  }
-                                  ?>
-                                </h6>
-                              </div>
-                            </div>
-                            <div class="row" style="margin-top: 2rem;">
-                              <div class="col-md-8">
-                                <label for="bayar">Unggah bukti pembayaran</label>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-8">
-                                <input class="form-control" type="file" name="foto" id="bayar" style="width:auto;">
-                              </div>
-                              <div class="col-md-4" style="text-align: end;">
-                                <button type="submit" class="btn btn-success"
-                                  name="btn-payment"><strong>Pay</strong></button>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- modal keterangan reject -->
-                  <div class="modal fade" id="ketReject<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
-                    aria-labelledby="modalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-body">
-                          <div class="alert alert-warning">
-                            <button type="button" class="close" data-dismiss="modal"
-                              aria-label="Close">&times;</span></button>
-                            <div class="alert-icon">
-                              <i class="fa fa-warning"></i>
-                            </div>
-                            <div class="alert-text">
-                              <h5>Keterangan reject</h5>
-                              <ul>
-                                <p>
-                                  <?= $row["ket_reject"]; ?>
-                                </p>
-                              </ul>
+                              $no_trans = $row["no_trans"];
+                              $detail = query("SELECT * FROM transaksi_item WHERE no_trans='$no_trans'");
+                              foreach ($detail as $data) {
+                                ?>
+                                <div class="card custom-card">
+                                  <div class="custom-card-content">
+                                    <div class="row">
+                                      <div class="col-md-2">
+                                        <img src="image/<?= $data["foto"]; ?>" width="100" class="wait-image" alt="">
+                                      </div>
+                                      <div class="col-md-7 wait-field">
+                                        <h5>
+                                          <?= $data["no_trans"]; ?>
+                                        </h5>
+                                        <h5 style="font-size: 26px;">
+                                          <?= $data["nama"]; ?>
+                                        </h5>
+                                        <h5>
+                                          <?= $data["ket"]; ?>
+                                        </h5>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <h5 class="wait-harga-modal">
+                                          IDR
+                                          <?= number_format($data["harga"]); ?>
+                                        </h5>
+                                        <h5 class="field-modal">Jumlah</h5>
+                                        <h5 class="field-modal">
+                                          <?= $data["jumlah"]; ?> Item
+                                        </h5>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <?php
+                              }
+                              ?>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <?php
-                endforeach;
-              endif;
-              ?>
+                    <!-- modal upload bukti bayar -->
+                    <div class="modal fade" id="pay<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="modal-title" id="modalLabel" style="font-size: 20px;">Payment</p>
+                          </div>
+                          <div class="modal-body">
+                            <form action="" method="post" enctype="multipart/form-data">
+                              <input type="hidden" name="no_trans" value="<?= $row["no_trans"]; ?>">
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <h6 style="font-size: 15px;">
+                                    Metode pembayaran :
+                                  </h6>
+                                  <img src="image/payment-logo/<?= $row["pembayaran"]; ?>.png" height="35" alt="payment">
+                                </div>
+                                <div class="col-md-8">
+                                  <h6 class="payment-notes">Silahkan melakukan pemabayaran ke nomor/rekening tujuan
+                                    berikut :</h6>
+                                  <h6 class="payment-notes">
+                                    <?php
+                                    if ($row["pembayaran"] != "bca") {
+                                      echo strtoupper($row["pembayaran"]) . " 085156963417 <br> a/n Nandang Budi";
+                                    } elseif ($row["pembayaran"] == "bca") {
+                                      echo "BCA 10123487 a/n Nandang Budi";
+                                    }
+                                    ?>
+                                  </h6>
+                                </div>
+                              </div>
+                              <div class="row" style="margin-top: 2rem;">
+                                <div class="col-md-8">
+                                  <label for="bayar">Unggah bukti pembayaran</label>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-8">
+                                  <input class="form-control" type="file" name="foto" id="bayar" style="width:auto;">
+                                </div>
+                                <div class="col-md-4" style="text-align: end;">
+                                  <button type="submit" class="btn btn-success"
+                                    name="btn-payment"><strong>Pay</strong></button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
+                    <!-- modal keterangan reject -->
+                    <div class="modal fade" id="ketReject<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body">
+                            <div class="alert alert-warning">
+                              <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">&times;</span></button>
+                              <div class="alert-icon">
+                                <i class="fa fa-warning"></i>
+                              </div>
+                              <div class="alert-text">
+                                <h5>Keterangan reject</h5>
+                                <ul>
+                                  <p>
+                                    <?= $row["ket_reject"]; ?>
+                                  </p>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <?php
+                  endforeach;
+                endif;
+                ?>
+
+              </div>
             </div>
             <!-- end tab payment order -->
 
             <!-- tab on process order -->
             <div role="tabpanel" class="tab-pane" id="products">
-              <?php
-              if (isset($_SESSION["login"])):
-                foreach ($on_process as $row):
-                  ?>
-                  <div class="card custom-card-onprocess">
-                    <div class="custom-card-content">
-                      <div class="row">
-                        <div class="col-md-4 wait-field">
-                          <h5 class="card-no">
-                            <?= $row["no_trans"]; ?>
-                          </h5>
-                          <h5>Total</h5>
-                          <h5>
-                            <?= $row["jumlah_produk"] ?> Produk,
-                            <?= $row["jumlah_order"]; ?> Item
-                          </h5>
-                        </div>
-                        <div class="col-md-5 wait-field wait-ping">
-                          <?php
-                          if ($row["proses_status"] == "on process"):
-                            ?>
-                            <div class="row">
-                              <div class="col-md-1">
-                                <div class="heartbeat"></div>
-                                <div class="dot"></div>
-                              </div>
-                              <div class="col-md-10">
-                                <span>
-                                  <h5 class="pay-delay">
-                                    admin sedang mempersiapkan pengiriman produk
-                                  </h5>
-                                </span>
-                              </div>
-                            </div>
-                          <?php elseif ($row["proses_status"] == "on delivery"): ?>
-                            <div class="row">
-                              <div class="col-md-1">
-                                <div class="heartbeat-success"></div>
-                                <div class="dot-success"></div>
-                              </div>
-                              <div class="col-md-10">
-                                <span>
-                                  <h5 class="pay-confirm">
-                                    produk sedang dikirim, untuk detail pengiriman silahkan klik tombol dibawah
-                                  </h5>
-                                </span>
-                              </div>
-                              <div class="row text-center btn-deliv">
-                                <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
-                                  data-target="#detailDeliv<?= $row["no_trans"]; ?>"><strong>Cek Pengiriman <i
-                                      class="fa fa-chevron-down"></i></strong></button>
-                              </div>
-                            </div>
-                          <?php endif; ?>
-                        </div>
-                        <div class="col-md-3 detail-card">
-                          <a href="" data-toggle="modal" data-target="#detailOrder<?= $row["no_trans"]; ?>">
-                            <h5 class="wait-details">
-                              details <i class="fa fa-chevron-right"></i>
+              <div class="longEnough mCustomScrollbar" data-mcs-theme="dark">
+                <?php
+                if (isset($_SESSION["login"])):
+                  foreach ($on_process as $row):
+                    ?>
+                    <div class="card custom-card-onprocess">
+                      <div class="custom-card-content">
+                        <div class="row">
+                          <div class="col-md-4 wait-field">
+                            <h5 class="card-no">
+                              <?= $row["no_trans"]; ?>
                             </h5>
-                          </a>
-                          <h5 class="wait-harga">
-                            IDR
-                            <?= number_format($row["total"]); ?>
-                          </h5>
-                          <button class="btn btn-success btn-sm" type="button" data-toggle="modal"
-                            data-target="#done<?= $row["no_trans"]; ?>"><strong>Done</strong></button>
+                            <h5>Total</h5>
+                            <h5>
+                              <?= $row["jumlah_produk"] ?> Produk,
+                              <?= $row["jumlah_order"]; ?> Item
+                            </h5>
+                          </div>
+                          <div class="col-md-5 wait-field wait-ping">
+                            <?php
+                            if ($row["proses_status"] == "on process"):
+                              ?>
+                              <div class="row">
+                                <div class="col-md-1">
+                                  <div class="heartbeat"></div>
+                                  <div class="dot"></div>
+                                </div>
+                                <div class="col-md-10">
+                                  <span>
+                                    <h5 class="pay-delay">
+                                      admin sedang mempersiapkan pengiriman produk
+                                    </h5>
+                                  </span>
+                                </div>
+                              </div>
+                            <?php elseif ($row["proses_status"] == "on delivery"): ?>
+                              <div class="row">
+                                <div class="col-md-1">
+                                  <div class="heartbeat-success"></div>
+                                  <div class="dot-success"></div>
+                                </div>
+                                <div class="col-md-10">
+                                  <span>
+                                    <h5 class="pay-confirm">
+                                      produk sedang dikirim, untuk detail pengiriman silahkan klik tombol dibawah
+                                    </h5>
+                                  </span>
+                                </div>
+                                <div class="row text-center btn-deliv">
+                                  <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
+                                    data-target="#detailDeliv<?= $row["no_trans"]; ?>"><strong>Cek Pengiriman <i
+                                        class="fa fa-chevron-down"></i></strong></button>
+                                </div>
+                              </div>
+                            <?php endif; ?>
+                          </div>
+                          <div class="col-md-3 detail-card">
+                            <a href="" data-toggle="modal" data-target="#detailOrder<?= $row["no_trans"]; ?>">
+                              <h5 class="wait-details">
+                                details <i class="fa fa-chevron-right"></i>
+                              </h5>
+                            </a>
+                            <h5 class="wait-harga">
+                              IDR
+                              <?= number_format($row["total"]); ?>
+                            </h5>
+                            <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
+                              data-target="#invoice<?= $row["no_trans"]; ?>" <?php if ($row["proses_status"] != "on delivery") {
+                                  echo "disabled";
+                                }
+                                ?>><strong>Invoice <i
+                                  class="fa fa-file-invoice"></i></strong></button>
+                            <button class="btn btn-success btn-sm" type="button" data-toggle="modal"
+                              data-target="#done<?= $row["no_trans"]; ?>" <?php if ($row["proses_status"] != "on delivery") {
+                                  echo "disabled";
+                                }
+                                ?>><strong>Done</strong></button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- modal detail pengiriman -->
-                  <div class="modal fade" id="detailDeliv<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
-                    aria-labelledby="modalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                      <div class="modal-content">
-                        <div class="modal-body">
-                          <div class="alert alert-info">
-                            <button type="button" class="close" data-dismiss="modal"
-                              aria-label="Close">&times;</span></button>
-                            <div class="alert-icon">
-                              <i class="glyphicon glyphicon-info-sign"></i>
+                    <!-- modal detail pengiriman -->
+                    <div class="modal fade" id="detailDeliv<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body">
+                            <div class="alert alert-info">
+                              <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">&times;</span></button>
+                              <div class="alert-icon">
+                                <i class="glyphicon glyphicon-info-sign"></i>
+                              </div>
+                              <div class="alert-text">
+                                <div class="row">
+                                  <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                      <tr>
+                                        <th colspan="2" class="text-center align-middle">
+                                          <h5 style="font-size: 16px;">Detail Pengiriman</h5>
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          Nama Penerima
+                                        </td>
+                                        <td>
+                                          <?= $row["nama_penerima"]; ?>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Alamat
+                                        </td>
+                                        <td>
+                                          <?= $row["alamat"]; ?>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          No. HP
+                                        </td>
+                                        <td>
+                                          <?= $row["no_hp"]; ?>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Ekspedisi
+                                        </td>
+                                        <td>
+                                          <?= $row["ekspedisi"]; ?>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          No. Resi
+                                        </td>
+                                        <td>
+                                          <?= $row["no_resi"]; ?>
+                                          <span>
+                                            <button class="btn btn-light btn-sm"
+                                              onclick="copyToClipboard('<?= $row['no_resi']; ?>')"><i
+                                                class="fa fa-copy"></i></button>
+                                          </span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
                             </div>
-                            <div class="alert-text">
-                              <div class="row">
-                                <table class="table table-bordered">
-                                  <thead class="thead-dark">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- modal pesanan selesai -->
+                    <div class="modal fade" id="done<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="col-md-12 text-center">
+                                <svg width="150px" height="150px" viewBox="0 0 133 133" version="1.1"
+                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                  <g id="check-group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <circle id="filled-circle" fill="#07b481" cx="66.5" cy="66.5" r="54.5" />
+                                    <circle id="white-circle" fill="#FFFFFF" cx="66.5" cy="66.5" r="55.5" />
+                                    <circle id="outline" stroke="#07b481" stroke-width="4" cx="66.5" cy="66.5" r="54.5" />
+                                    <polyline id="check" stroke="#FFFFFF" stroke-width="5.5" points="41 70 56 85 92 49" />
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-12 text-center">
+                                <h6 style="font-size: 50px;">Terimakasih !</h6>
+                                <h6 style="font-size: 14px; padding-bottom: 1rem;">Ditunggu Orderannya Kembali</h6>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6 btn-cancel">
+                                <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal"
+                                  aria-label="Close"><strong>CANCEL
+                                  </strong><i class="fa fa-circle-xmark"></i></button>
+                              </div>
+                              <div class="col-md-6 btn-end">
+                                <form action="" method="post">
+                                  <input type="hidden" value="<?= $row["no_trans"]; ?>" name="no_trans">
+                                  <button type="submit" class="btn btn-success btn-lg" name="btn-order-done"><strong>SELESAI
+                                    </strong><i class="fa fa-circle-check"></i></button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- modal detail onprocess  -->
+                    <div class="modal fade" id="detailOrder<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="modal-title" id="modalLabel" style="font-size: 20px;">Detail Order</p>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="longEnough mCustomScrollbar" data-mcs-theme="dark">
+                                <div class="card custom-card-data">
+                                  <div class="custom-card-content">
+                                    <div class="row">
+                                      <div class="col-md-6 wait-field">
+                                        <h5 style="font-size: 26px;">
+                                          Data Pengiriman
+                                        </h5>
+                                        <h5>
+                                          Nama Penerima :
+                                          <?= $row["nama_penerima"]; ?>
+                                        </h5>
+                                        <h5>
+                                          No HP Penerima :
+                                          <?= $row["no_hp"]; ?>
+                                        </h5>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <h5 class="wait-harga-modal col-alamat" style="font-size: 26px;">
+                                          Alamat Penerima :
+                                        </h5>
+                                        <h5 class="field-modal col-alamat">
+                                          <?= $row["alamat"]; ?>
+                                        </h5>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <?php
+                              $no_trans = $row["no_trans"];
+                              $detail = query("SELECT * FROM transaksi_item WHERE no_trans='$no_trans'");
+                              foreach ($detail as $data) {
+                                ?>
+                                <div class="card custom-card">
+                                  <div class="custom-card-content">
+                                    <div class="row">
+                                      <div class="col-md-2">
+                                        <img src="image/<?= $data["foto"]; ?>" width="100" class="wait-image" alt="">
+                                      </div>
+                                      <div class="col-md-7 wait-field">
+                                        <h5>
+                                          <?= $data["no_trans"]; ?>
+                                        </h5>
+                                        <h5 style="font-size: 26px;">
+                                          <?= $data["nama"]; ?>
+                                        </h5>
+                                        <h5>
+                                          <?= $data["ket"]; ?>
+                                        </h5>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <h5 class="wait-harga-modal">
+                                          IDR
+                                          <?= number_format($data["harga"]); ?>
+                                        </h5>
+                                        <h5 class="field-modal">Jumlah</h5>
+                                        <h5 class="field-modal">
+                                          <?= $data["jumlah"]; ?> Item
+                                        </h5>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <?php
+                              }
+                              ?>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- end modal detail on proses -->
+
+                    <!-- modal invoice -->
+                    <div class="modal fade" id="invoice<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body">
+
+                            <div class="row">
+                              <div class="col-md-6 text-start">
+                                <img src="image/logo-meubel.png" width="120" alt="link-meubel">
+                              </div>
+                              <div class="col-md-6 text-end">
+                                <h5 class="inv-text">INVOICE</h5>
+                                <h6 class="inv-header">
+                                  <?= "INV/" . date("Y.m.d") . "/" . $row["no_trans"]; ?>
+                                </h6>
+                              </div>
+                            </div>
+                            <div class="row inv-head">
+                              <div class="col-md-7 text-start">
+                                <h6 class="inv-letter">DITERBITKAN ATAS NAMA</h6>
+                                <p class="inv-letter">Penjual : <strong>Link-Meubel</strong></p>
+                              </div>
+                              <div class="col-md-5">
+                                <h6 class="inv-letter">UNTUK</h6>
+                                <p class="inv-letter">Pembeli :
+                                  <?= $row["nama_penerima"]; ?>
+                                </p>
+                                <p class="inv-letter">Tanggal Pembelian :
+                                  <?= date("d-m-Y", strtotime($row["tgl_transaksi"])); ?>
+                                </p>
+                                <p class="inv-letter">Alamat Pengiriman : <strong>
+                                    <?= $row["nama_penerima"]; ?>
+                                  </strong>
+                                  (
+                                  <?= $row["alamat"]; ?> )
+                                </p>
+                              </div>
+                            </div>
+                            <div class="row inv-head">
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead class="inv-letter fw-bold">
                                     <tr>
-                                      <th colspan="2" class="text-center align-middle">
-                                        <h5 style="font-size: 16px;">Detail Pengiriman</h5>
-                                      </th>
+                                      <th>NAMA PRODUK</th>
+                                      <th>JUMLAH</th>
+                                      <th>HARGA</th>
+                                      <th>SUBTOTAL</th>
                                     </tr>
                                   </thead>
                                   <tbody>
+                                    <?php
+                                    $no_trans = $row["no_trans"];
+                                    $total = $row["total"];
+                                    $inv = query("SELECT nama, harga, jumlah, ket, (harga*jumlah) AS subtotal FROM transaksi_item WHERE no_trans='$no_trans'");
+                                    foreach ($inv as $data):
+                                      ?>
+                                      <tr>
+                                        <td class="prod-name">
+                                          <?= $data["nama"] . " " . "( " . $data["ket"] . " )"; ?>
+                                        </td>
+                                        <td>
+                                          <?= $data["jumlah"]; ?>
+                                        </td>
+                                        <td>
+                                          <?= formatRupiah($data["harga"]); ?>
+                                        </td>
+                                        <td>
+                                          <?= formatRupiah($data["subtotal"]); ?>
+                                        </td>
+                                      </tr>
+                                      <?php
+                                    endforeach;
+                                    ?>
                                     <tr>
+                                      <td colspan="2"></td>
                                       <td>
-                                        Nama Penerima
+                                        <div>
+                                          <h6 class="total-head">TOTAL HARGA (
+                                            <?= $row["jumlah_produk"]; ?> ) item
+                                          </h6>
+                                          <p class="inv-total">Biaya Jasa Aplikasi</p>
+                                          <h6 class="inv-total">TOTAL TAGIHAN </h6>
+                                        </div>
                                       </td>
                                       <td>
-                                        <?= $row["nama_penerima"]; ?>
+                                        <p>
+                                          <?= formatRupiah($row["total"]); ?>
+                                        </p>
+                                        <p>
+                                          Rp. 1.000
+                                        </p>
+                                        <p>
+                                          <?= formatRupiah($row["total"] + 1000) ?>
+                                        </p>
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td>
-                                        Alamat
+                                      <td colspan="2">
+                                        <p class="inv-letter">
+                                          Kurir :
+                                        </p>
+                                        <h6 class="inv-letter">
+                                          <?= strtoupper($row["ekspedisi"]); ?>
+                                        </h6>
                                       </td>
-                                      <td>
-                                        <?= $row["alamat"]; ?>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        No. HP
-                                      </td>
-                                      <td>
-                                        <?= $row["no_hp"]; ?>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        Ekspedisi
-                                      </td>
-                                      <td>
-                                        <?= $row["ekspedisi"]; ?>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        No. Resi
-                                      </td>
-                                      <td>
-                                        <?= $row["no_resi"]; ?>
+                                      <td colspan="2">
+                                        <p class="inv-letter">
+                                          Metode Pembayaran :
+                                        </p>
+                                        <h6 class="inv-letter">
+                                          <?= strtoupper($row["pembayaran"]); ?>
+                                        </h6>
                                       </td>
                                     </tr>
                                   </tbody>
                                 </table>
                               </div>
                             </div>
+
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                    <!-- end invoice -->
+                    <?php
+                  endforeach;
+                endif;
+                ?>
 
-                  <!-- modal konfirmasi pesanan selesai -->
-                  <div class="modal fade" id="done<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
-                    aria-labelledby="modalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-body">
-                          <div class="row">
-                            <div class="col-md-12 text-center">
-                              <img src="image/payment-logo/deliv.png" width="250" alt="">
-                            </div>
+              </div>
+            </div>
+
+            <!-- end tab on process order -->
+
+            <div role="tabpanel" class="tab-pane" id="services">
+              <div class="longEnough mCustomScrollbar" data-mcs-theme="dark">
+                <?php
+                if (isset($_SESSION["login"])):
+                  foreach ($history as $row):
+                    ?>
+                    <div class="card custom-card-history">
+                      <div class="custom-card-content">
+                        <div class="row">
+                          <div class="col-md-9 wait-field">
+                            <h5 class="card-no">
+                              <?= $row["no_trans"]; ?>
+                            </h5>
+                            <h5>Total</h5>
+                            <h5>
+                              <?= $row["jumlah_produk"] ?> Produk,
+                              <?= $row["jumlah_order"]; ?> Item
+                            </h5>
                           </div>
-                          <div class="row" style="margin-top: 40px;">
-                            <div class="col-md-12 text-center">
-                              <h6 style="font-size: 25px;">Apakah anda yakin mengakhiri transaksi ini ?</h6>
-                              <h6 style="font-size: 14px; padding-top: 1rem;">Periksa kembali produk anda, terimakasih</h6>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-6 btn-cancel">
-                              <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal"
-                                aria-label="Close"><strong>CANCEL </strong><i class="fa fa-circle-xmark"></i></button>
-                            </div>
-                            <div class="col-md-6 btn-end">
-                              <button type="button" class="btn btn-success btn-lg"><strong>SELESAI </strong><i
-                                  class="fa fa-circle-check"></i></button>
-                            </div>
+                          <div class="col-md-3 detail-card">
+                            <a href="" data-toggle="modal" data-target="#detailOrder<?= $row["no_trans"]; ?>">
+                              <h5 class="wait-details">
+                                details <i class="fa fa-chevron-right"></i>
+                              </h5>
+                            </a>
+                            <h5 class="wait-harga">
+                              IDR
+                              <?= number_format($row["total"]); ?>
+                            </h5>
+                            <a href="hapus_trans.php?no_trans=<?= $row["no_trans"]; ?>">
+                              <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                            </a>
+                            <button class="btn btn-warning btn-sm" type="button" data-toggle="modal"
+                              data-target="#pay<?= $row["no_trans"]; ?>"><strong>Pay</strong></button>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- modal detail onprocess  -->
-                  <div class="modal fade" id="detailOrder<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
-                    aria-labelledby="modalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                          <p class="modal-title" id="modalLabel" style="font-size: 20px;">Detail Order</p>
-                        </div>
-                        <div class="modal-body">
-                          <div class="row">
-                            <div class="card custom-card-data">
-                              <div class="custom-card-content">
-                                <div class="row">
-                                  <div class="col-md-6 wait-field">
-                                    <h5 style="font-size: 26px;">
-                                      Data Pengiriman
-                                    </h5>
-                                    <h5>
-                                      Nama Penerima :
-                                      <?= $row["nama_penerima"]; ?>
-                                    </h5>
-                                    <h5>
-                                      No HP Penerima :
-                                      <?= $row["no_hp"]; ?>
-                                    </h5>
-                                  </div>
-                                  <div class="col-md-6">
-                                    <h5 class="wait-harga-modal col-alamat" style="font-size: 26px;">
-                                      Alamat Penerima :
-                                    </h5>
-                                    <h5 class="field-modal col-alamat">
-                                      <?= $row["alamat"]; ?>
-                                    </h5>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <?php
-                            $no_trans = $row["no_trans"];
-                            $detail = query("SELECT * FROM transaksi_item WHERE no_trans='$no_trans'");
-                            foreach ($detail as $data) {
-                              ?>
-                              <div class="card custom-card">
+                    <!-- modal detail orderan  -->
+                    <div class="modal fade" id="detailOrder<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="modal-title" id="modalLabel" style="font-size: 20px;">Detail Order</p>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="card custom-card-data">
                                 <div class="custom-card-content">
                                   <div class="row">
-                                    <div class="col-md-2">
-                                      <img src="image/<?= $data["foto"]; ?>" width="100" class="wait-image" alt="">
-                                    </div>
-                                    <div class="col-md-7 wait-field">
-                                      <h5>
-                                        <?= $data["no_trans"]; ?>
-                                      </h5>
+                                    <div class="col-md-6 wait-field">
                                       <h5 style="font-size: 26px;">
-                                        <?= $data["nama"]; ?>
+                                        Data Pengiriman
                                       </h5>
                                       <h5>
-                                        <?= $data["ket"]; ?>
+                                        Nama Penerima :
+                                        <?= $row["nama_penerima"]; ?>
+                                      </h5>
+                                      <h5>
+                                        No HP Penerima :
+                                        <?= $row["no_hp"]; ?>
                                       </h5>
                                     </div>
-                                    <div class="col-md-3">
-                                      <h5 class="wait-harga-modal">
-                                        IDR
-                                        <?= number_format($data["harga"]); ?>
+                                    <div class="col-md-6">
+                                      <h5 class="wait-harga-modal col-alamat" style="font-size: 26px;">
+                                        Alamat Penerima :
                                       </h5>
-                                      <h5 class="field-modal">Jumlah</h5>
-                                      <h5 class="field-modal">
-                                        <?= $data["jumlah"]; ?> Item
+                                      <h5 class="field-modal col-alamat">
+                                        <?= $row["alamat"]; ?>
                                       </h5>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                               <?php
-                            }
-                            ?>
+                              $no_trans = $row["no_trans"];
+                              $detail = query("SELECT * FROM transaksi_item WHERE no_trans='$no_trans'");
+                              foreach ($detail as $data) {
+                                ?>
+                                <div class="card custom-card">
+                                  <div class="custom-card-content">
+                                    <div class="row">
+                                      <div class="col-md-2">
+                                        <img src="image/<?= $data["foto"]; ?>" width="100" class="wait-image" alt="">
+                                      </div>
+                                      <div class="col-md-7 wait-field">
+                                        <h5>
+                                          <?= $data["no_trans"]; ?>
+                                        </h5>
+                                        <h5 style="font-size: 26px;">
+                                          <?= $data["nama"]; ?>
+                                        </h5>
+                                        <h5>
+                                          <?= $data["ket"]; ?>
+                                        </h5>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <h5 class="wait-harga-modal">
+                                          IDR
+                                          <?= number_format($data["harga"]); ?>
+                                        </h5>
+                                        <h5 class="field-modal">Jumlah</h5>
+                                        <h5 class="field-modal">
+                                          <?= $data["jumlah"]; ?> Item
+                                        </h5>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <?php
+                              }
+                              ?>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                    <!-- end modal detail orderan -->
 
-                  <?php
-                endforeach;
-              endif;
-              ?>
+                    <!-- modal invoice -->
+                    <div class="modal fade" id="detailOrder<?= $row["no_trans"]; ?>" tabindex="-1" role="dialog"
+                      aria-labelledby="modalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="modal-title" id="modalLabel" style="font-size: 20px;">Detail Order</p>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- end invoice -->
+
+                    <?php
+                  endforeach;
+                endif;
+                ?>
+              </div>
             </div>
-            <!-- end tab on process order -->
 
-            <div role="tabpanel" class="tab-pane" id="services">
-              rendis iste neque totam autem quam ratione odio culpa ex consectetur sit, facere sed, asperiores, deleniti
-              dicta magnam ad.</div>
           </div>
         </div>
       </div>
@@ -1256,15 +1496,15 @@ if (isset($_POST["btn-payment"])) {
     <div class="container text-center">
       <div class="div-header">
         <h2>ABOUT</h2>
-        <p class="subj"><i>Sabana Adventure</i></p><br><br>
+        <p class="subj"><i>Link Meubel</i></p><br><br>
         <div class="row">
           <div class="col-md-6">
             <br>
-            <a href="#about" data-toggle="collapse">
-              <img src="image/founder.jpg" class="img-circle person" alt="Wahid">
+            <a href="#about-owner" data-toggle="collapse">
+              <img src="image/owner-link.jpeg" class="img-circle person" alt="Owner">
             </a>
-            <div id="about" class="collapse">
-              <h6 style="font-size: 2vmax;">Wahid Setyawan</h6>
+            <div id="about-owner" class="collapse">
+              <h6 style="font-size: 2vmax;">Nandang Budi</h6>
               <p><i>Owner</i></p>
             </div>
             <br><br>
@@ -1272,9 +1512,9 @@ if (isset($_POST["btn-payment"])) {
           <div class="map-responsive">
             <div class="col-md-6">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.185288614528!2d110.67572131546173!3d-7.444741675426823!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a729adfc3fba1%3A0x2fd359627458a8b4!2sSabana%20Adv!5e0!3m2!1sen!2sid!4v1657676099905!5m2!1sen!2sid"
-                style="border:0; width: 25vmax; height: 17vmax;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.2558543521445!2d110.7103286!3d-6.6151014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e711f578e1754e3%3A0x79ebf228b60a7bb6!2sLink%20Meubel!5e0!3m2!1sen!2sid!4v1692789945053!5m2!1sen!2sid"
+                width="600" height="450" style="border:0; width: 25vmax; height: 17vmax;" allowfullscreen=""
+                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
           </div>
         </div>
@@ -1309,7 +1549,7 @@ if (isset($_POST["btn-payment"])) {
   </footer>
 
 
-  <script>
+  <script type="text/javascript">
     $(document).ready(function () {
       $('[data-toggle="tooltip"]').tooltip();
 
@@ -1329,6 +1569,7 @@ if (isset($_POST["btn-payment"])) {
         }
       });
     })
+
   </script>
   <script src="js/script.js"></script>
 </body>
