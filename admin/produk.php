@@ -106,7 +106,7 @@ include 'header.php';
 									<?= $row["nama"]; ?>
 								</td>
 								<td class="align-middle">
-									<?= $row["harga"]; ?>
+									<?= "IDR " . number_format($row["harga"]); ?>
 								</td>
 								<td class="align-middle">
 									<?= $row["stok"]; ?>

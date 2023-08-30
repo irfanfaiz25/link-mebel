@@ -29,8 +29,6 @@ $curPageName = substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], 
 
     <title>Link Meubel Admin</title>
     <link rel="icon" href="../image/logo-title.png">
-
-
 </head>
 
 <body>

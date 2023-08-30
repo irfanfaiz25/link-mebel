@@ -85,8 +85,8 @@ a {
 
 h3, h4, h2 {
   margin: 10px 0 10px 0;
-  letter-spacing: 10px;      
-  font-size: 3vmax;
+  letter-spacing: 2px;      
+  font-size: 2.2vmax;
   color: #111;
   font-weight: bold;
 }
@@ -100,7 +100,7 @@ h5 {
 }
 h6 {
   letter-spacing: 1px;      
-  font-size: 1.5vmax;
+  /* font-size: 1vmax; */
   color: #222222;
   font-weight: 800;
 }
@@ -280,3 +280,49 @@ i :not(.nav-col){
 
 /* .bukti-modal */
 
+.order-card {
+  color: #fff;
+}
+
+.bg-c-blue {
+  background: linear-gradient(45deg,#4099ff,#73b4ff);
+}
+
+.bg-c-green {
+  background: linear-gradient(45deg,#2ed8b6,#59e0c5);
+}
+
+.bg-c-yellow {
+  background: linear-gradient(45deg,#FFB64D,#ffcb80);
+}
+
+.bg-c-pink {
+  background: linear-gradient(45deg,#FF5370,#ff869a);
+}
+
+
+.card {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+  box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+  border: none;
+  /* margin-bottom: px; */
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.card .card-block {
+  padding: 25px;
+}
+
+.order-card i {
+  font-size: 26px;
+}
+
+.f-left {
+  float: left;
+}
+
+.f-right {
+  float: right;
+}

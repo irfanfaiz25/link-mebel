@@ -64,7 +64,7 @@ include 'header.php';
                                     <?= number_format($row["total"]); ?>
                                 </td>
                                 <td class="align-middle">
-                                    <?= $row["tgl_transaksi"]; ?>
+                                    <?= date("d-m-Y | H:i", strtotime($row["tgl_transaksi"])); ?>
                                 </td>
                                 <td class="align-middle text-center">
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"

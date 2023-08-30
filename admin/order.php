@@ -65,7 +65,7 @@ include 'header.php';
                                     <?= number_format($row["total"]); ?>
                                 </td>
                                 <td class="align-middle">
-                                    <?= $row["tgl_transaksi"]; ?>
+                                    <?= date("d-m-Y | H:i", strtotime($row["tgl_transaksi"])); ?>
                                 </td>
                                 <td class="align-middle text-center">
                                     <?= statusBadges($row["proses_status"]); ?>
@@ -96,7 +96,6 @@ include 'header.php';
                                             data-target="#ketReject<?= $row["no_trans"]; ?>"><i
                                                 class="fa fa-circle-xmark"></i><strong> reject</strong></button>
                                     </form>
-
                                 </td>
                             </tr>
 
@@ -260,7 +259,6 @@ include 'header.php';
     });
 </script>
 
-<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>

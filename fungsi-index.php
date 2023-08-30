@@ -39,7 +39,6 @@ $kursi = query("SELECT * FROM tb_produk WHERE kategori='Kursi'");
 $slider = query("SELECT * FROM tb_produk ORDER BY id_produk LIMIT 6");
 
 if (isset($_POST["cart"])) {
-    // echo ($_POST["quant"][1]);
     if (!isset($_SESSION["login"]) || !isset($_SESSION["user"])) {
         echo "
             <script>

@@ -262,7 +262,6 @@ function checkout($data)
     $alamat = $data["alamat"];
     $pembayaran = $data["pembayaran"];
     // $notes = $data["notes"];
-
     // membuat kode
     $query = mysqli_query($konek, "SELECT max(no_trans) AS kodeTerbesar FROM transaksi_item");
     $data = mysqli_fetch_array($query);
@@ -350,6 +349,12 @@ function orderAccepted($data)
     global $konek;
 
     $no_trans = $data["no_trans"];
+    $query = mysqli_query($konek, "SELECT * FROM transaksi_item WHERE no_trans='$no_trans' GROUP BY id_produk");
+    while ($row = mysqli_fetch_assoc($query)) {
+        $id_produk = $row["id_produk"];
+        $jumlah = $row["jumlah"];
+        mysqli_query($konek, "UPDATE tb_produk SET stok=(stok-$jumlah) WHERE id_produk=$id_produk");
+    }
 
     $query = "UPDATE transaksi_item SET proses_status='on process' WHERE no_trans='$no_trans'";
     mysqli_query($konek, $query);

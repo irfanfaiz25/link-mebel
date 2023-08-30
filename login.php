@@ -44,7 +44,7 @@ if (isset($_POST["login"])) {
 
 <head>
   <title>halaman login</title>
-  <link rel="icon" href="image/logo.png">
+  <link rel="icon" href="image/logo-title.png">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -61,20 +61,24 @@ if (isset($_POST["login"])) {
 
   <div class="login">
     <div class="login-dark text-center">
-      <form name="formlogin" action="" method="post">
-        <img src="image/logo-meubel.png" class="icon" alt="..."><br>
-        <!-- <p class="navbar-brand jud" style="padding: 0px 47px 0px;">Sabana<span>.</span>adv</p> -->
-        <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
-        <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
-        <?php if (isset($error)) : ?>
-          <div class="alert alert-danger" role="alert">
-            Username atau password salah
+      <div class="row">
+        <form name="formlogin" action="" method="post">
+          <img src="image/logo-meubel.png" class="icon" alt="..."><br>
+          <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
+          <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password">
           </div>
-        <?php endif; ?>
-        <div class="form-group"><button class="btn btn-primary btn-block" type="submit" name="login">
-            <h6 class="log">LOGIN</h6>
-          </button></div>
-        <p style="margin-top: 28px !important;">belum punya akun ? <a href="daftar.php" style="color: #e63946 !important;">daftar</a></p>
+          <?php if (isset($error)): ?>
+            <div class="alert alert-danger" role="alert">
+              Username atau password salah
+            </div>
+          <?php endif; ?>
+          <div class="form-group"><button class="btn btn-primary btn-block" type="submit" name="login">
+              <h6 class="log">LOGIN</h6>
+            </button></div>
+          <p style="margin-top: 28px !important;">belum punya akun ? <a href="daftar.php"
+              style="color: #e63946 !important; text-decoration: none;">daftar</a></p>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -83,16 +87,6 @@ if (isset($_POST["login"])) {
       var email = document.forms["formlogin"]["emaill"];
       var pass = document.forms["formlogin"]["password"];
 
-      // if (email.value == "") {
-      //   window.alert("Masukkan email anda !");
-      //   email.focus();
-      //   return false;
-      // }
-      // if (email.value == "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/") {
-      //   window.alert("Masukkan email yang valid !");
-      //   email.focus();
-      //   return false;
-      // }
       if (pass.value == "") {
         window.alert("Masukkan password anda !");
         pass.focus();

@@ -6,11 +6,11 @@ if (isset($_POST["add"])) {
         header('Location: produk.php');
     } else {
         echo "
-					<script>
-						alert('data tidak berhasil ditambahkan');
-						document.location.href = 'produk.php';
-					</script>
-					";
+        <script>
+            alert('data tidak berhasil ditambahkan');
+            document.location.href = 'produk.php';
+        </script>
+        ";
     }
 }
 
@@ -20,11 +20,11 @@ if (isset($_POST["edit"])) {
         header('Location: produk.php');
     } else {
         echo "
-						<script>
-							alert('data tidak berhasil di ubah');
-							document.location.href = 'produk.php';
-						</script>
-						";
+            <script>
+                alert('data tidak berhasil di ubah');
+                document.location.href = 'produk.php';
+            </script>
+            ";
     }
 }
 
