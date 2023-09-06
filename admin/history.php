@@ -1,6 +1,6 @@
 <?php
 include '../fungsi/fungsi.php';
-include 'fungsi-transaction.php';
+include 'fungsi-history.php';
 include 'header.php';
 ?>
 <section class="p-4" id="main-content">
@@ -11,7 +11,7 @@ include 'header.php';
             </button>
         </div>
         <div class="col-md-9 float-start">
-            <h1><b>DATA TRANSAKSI</b></h1>
+            <h1><b>HISTORY</b></h1>
             <p style="margin-bottom: -7px; margin-top: -5px; color: #7B8FA1 !important;">Link-Meubel</p>
         </div>
         <div class="col-md-2">
@@ -28,7 +28,7 @@ include 'header.php';
             <div class="row dataku">
 
                 <div class="col-md-12 table-responsive-md">
-                    <table id="tabel-transaksi" class="table table-bordered table-striped">
+                    <table id="tabel-history" class="table table-bordered table-striped">
                         <thead class="table-warning">
                             <tr class="text-center">
                                 <th class="text-center">NO</th>
@@ -37,14 +37,14 @@ include 'header.php';
                                 <th class="text-center">JUMLAH ITEM</th>
                                 <th class="text-center">TOTAL</th>
                                 <th class="text-center">TANGGAL ORDER</th>
+                                <th class="text-center">TANGGAL SELESAI</th>
                                 <th class="text-center">DETAIL</th>
                                 <th class="text-center">RESI</th>
-                                <th class="text-center">STATUS</th>
                             </tr>
                         </thead>
 
                         <?php $i = 1; ?>
-                        <?php foreach ($transaction as $row): ?>
+                        <?php foreach ($sales_history as $row): ?>
                             <!-- <tbody> -->
                             <tr class="text-center">
                                 <td class="align-middle text-center">
@@ -66,25 +66,16 @@ include 'header.php';
                                 <td class="align-middle">
                                     <?= date("d-m-Y | H:i", strtotime($row["tgl_transaksi"])); ?>
                                 </td>
+                                <td class="align-middle">
+                                    <?= date("d-m-Y | H:i", strtotime($row["tgl_selesai"])); ?>
+                                </td>
                                 <td class="align-middle text-center">
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                         data-target="#detailOrder<?= $row["no_trans"]; ?>"><i
                                             class="fa fa-circle-info"></i></button>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <?php
-                                    if ($row["no_resi"] == ""):
-                                        ?>
-                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                            data-target="#addResi<?= $row["no_trans"]; ?>"><strong>Add Resi </strong><i
-                                                class="fa fa-receipt"></i></button>
-                                    <?php else:
-                                        echo $row["no_resi"];
-                                    endif;
-                                    ?>
-                                </td>
-                                <td class="align-middle">
-                                    <?= statusBadges($row["proses_status"]); ?>
+                                    <?= $row["no_resi"]; ?>
                                 </td>
                             </tr>
 
@@ -174,75 +165,6 @@ include 'header.php';
                                 </div>
                             </div>
 
-                            <!-- modal keterangan order reject -->
-                            <div id="ketReject<?= $row["no_trans"]; ?>" class="modal" tabindex="-1">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h6 class="modal-title text-dark">Reject Order</h6>
-                                            <button type="button" class="btn-close" data-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <form action="" method="post">
-                                                        <input type="hidden" name="no_trans"
-                                                            value="<?= $row["no_trans"]; ?>">
-                                                        <label for="ket_reject">
-                                                            <h5 class="text-dark">Keterangan Reject</h5>
-                                                        </label>
-                                                        <textarea name="ket_reject" id="ket_reject" class="form-control"
-                                                            placeholder="ex: Rekening tujuan untuk pembayaran anda salah, silahkan cek kembali"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" name="btn-reject"
-                                                class="btn btn-success btn-sm"><strong>Send </strong><i
-                                                    class="fa fa-paper-plane"></i></button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- modal add resi -->
-                            <div id="addResi<?= $row["no_trans"]; ?>" class="modal" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h6 class="modal-title text-dark">Add Resi</h6>
-                                            <button type="button" class="btn-close" data-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <form action="" method="post">
-                                                        <input type="hidden" name="no_trans"
-                                                            value="<?= $row["no_trans"]; ?>">
-                                                        <label for="ekspedisi">
-                                                            <h5 class="text-dark">Ekspedisi Pengiriman</h5>
-                                                        </label>
-                                                        <input type="text" name="ekspedisi" class="form-control"
-                                                            id="ekspedisi">
-                                                        <label for="no_resi">
-                                                            <h5 class="text-dark">Masukkan No. Resi</h5>
-                                                        </label>
-                                                        <input type="text" name="no_resi" class="form-control" id="no_resi">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" name="btn-add-resi"
-                                                class="btn btn-success btn-sm"><strong>Add </strong><i
-                                                    class="fa fa-circle-plus"></i></button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <?php $i++; ?>
                         <?php endforeach; ?>

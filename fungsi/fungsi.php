@@ -285,7 +285,7 @@ function checkout($data)
         $notes = $trans["ket"];
         $tgl = date("Y-m-d H:i:s");
 
-        $query = "INSERT IGNORE INTO transaksi_item VALUES ('$kode_sample','$id_user','$id_produk','$nm_brg','$harga','$jumlah','$notes','$foto','$tgl','$nama_penerima','$no_hp','$alamat','$pembayaran','waiting for payment','','','','')";
+        $query = "INSERT IGNORE INTO transaksi_item VALUES ('$kode_sample','$id_user','$id_produk','$nm_brg','$harga','$jumlah','$notes','$foto','$tgl','$nama_penerima','$no_hp','$alamat','$pembayaran','waiting for payment','','','','','')";
         mysqli_query($konek, $query);
     }
 

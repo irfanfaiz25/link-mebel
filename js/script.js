@@ -108,6 +108,22 @@ $(".input-number").keydown(function (e) {
             "pageLength": 5
         });
 
+        $(document).ready(function() {
+            $('#tabel-history').DataTable();
+        });
+
+         $('#tabel-history').dataTable({
+            "pageLength": 5
+        });
+
+        $(document).ready(function() {
+            $('#tabel-transaksi').DataTable();
+        });
+
+         $('#tabel-transaksi').dataTable({
+            "pageLength": 5
+        });
+
         var table = $('#tabel-barang').DataTable();
 
         table
@@ -166,3 +182,21 @@ $('.nav-tabs-dropdown')
             $(".content").mCustomScrollbar();
         });
     })(jQuery);
+
+    function previewImage() {
+        const image = document.querySelector('#foto')
+        const imgPreview = document.querySelector('.img-preview')
+
+        imgPreview.style.display = 'block'
+
+        const oFReader = new FileReader()
+        oFReader.readAsDataURL(image.files[0])
+
+        oFReader.onload = function(oFREvent) {
+            imgPreview.src = oFREvent.target.result
+        }
+
+    }
+
+    // clock dashboard admin
+    

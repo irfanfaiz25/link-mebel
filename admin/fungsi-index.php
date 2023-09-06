@@ -17,5 +17,9 @@ $query = mysqli_query($konek, "SELECT SUM(harga*jumlah) AS income FROM transaksi
 $res = mysqli_fetch_assoc($query);
 $count_income = $res["income"];
 
+$new_product = query("SELECT * FROM tb_produk ORDER BY id_produk DESC LIMIT 4");
+
+$new_order = query("SELECT *, SUM(transaksi_item.jumlah) AS jml_item FROM transaksi_item LEFT JOIN user ON transaksi_item.id_user = user.id WHERE proses_status='payment confirmation' OR proses_status='repayment' GROUP BY no_trans ORDER BY no_trans DESC");
+
 
 ?>

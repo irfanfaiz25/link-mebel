@@ -26,7 +26,7 @@ include 'header.php';
 
 			<div class="row utama">
 				<div class="col-md-12 justify-content-end">
-					<button type="button" class="btn btn-secondary float-end" data-toggle="modal"
+					<button type="button" class="btn btn-success float-end" data-toggle="modal"
 						data-target="#inputModal"><i class="fa fa-plus"></i></button>
 				</div>
 			</div>
@@ -57,7 +57,15 @@ include 'header.php';
 								<input type="text" class="form-control" name="kategori" id="kategori">
 
 								<label for="foto" style="padding-top: 8px;">Foto</label>
-								<input type="file" class="form-control" name="foto" id="foto">
+								<div class="row">
+									<div class="col-md-3">
+										<img class="img-preview img-fluid">
+									</div>
+									<div class="col-md-9">
+										<input type="file" class="form-control" name="foto" id="foto"
+											onchange="previewImage()">
+									</div>
+								</div>
 						</div>
 						<div class="modal-footer">
 							<button type="submit" class="btn btn-primary" name="add"><i class="fa fa-plus"></i>
@@ -67,9 +75,6 @@ include 'header.php';
 					</div>
 				</div>
 			</div>
-
-
-
 
 
 
@@ -117,18 +122,23 @@ include 'header.php';
 								<td class="align-middle">
 									<?= $row["kategori"]; ?>
 								</td>
-								<td class="align-middle"><img src="../image/<?= $row["foto"]; ?>" height="53" width="50"
-										alt=""></td>
+								<td class="align-middle">
+									<a href="" data-toggle="modal" data-target="#imgModal<?= $row["id_produk"]; ?>">
+										<img src="../image/<?= $row["foto"]; ?>" height="53" width="50" alt="">
+									</a>
+								</td>
 								<td class="text-center align-middle">
 
 									<button style="margin-right: 5px;" type="submit" class="btn btn-warning btn-sm mt-1"
 										name="ubah" data-toggle="modal" data-target="#editModal<?= $row["id_produk"]; ?>"
 										href=""><i class="fa fa-edit"></i></button>
-									<a class="btn btn-danger btn-sm mt-1" name="hapus"
-										href="hapus.php?id=<?= $row["id_produk"]; ?>"><i class="fa fa-trash"></i></a>
+									<a class="btn btn-danger btn-sm mt-1" name="hapus" data-toggle="modal"
+										data-target="#deleteConfirm<?= $row["id_produk"]; ?>"><i
+											class="fa fa-trash"></i></a>
 
 								</td>
 							</tr>
+
 							<!-- modal edit data -->
 							<div id="editModal<?= $row["id_produk"]; ?>" class="modal fade" tabindex="-1">
 								<div class="modal-dialog">
@@ -165,8 +175,26 @@ include 'header.php';
 													value="<?= $row["kategori"]; ?>">
 
 												<label for="foto" style="padding-top: 8px;">Foto</label>
-												<input type="file" class="form-control" name="foto" id="foto"
-													value="<?= $row["foto"]; ?>">
+												<div class="row">
+													<div class="col-md-3">
+														<?php
+														if ($row["foto"] == ""):
+															?>
+															<img class="img-preview img-fluid">
+															<?php
+														else:
+															?>
+															<img class="img-preview img-fluid"
+																src="../image/<?= $row["foto"]; ?>">
+															<?php
+														endif;
+														?>
+													</div>
+													<div class="col-md-9">
+														<input type="file" class="form-control" name="foto" id="foto"
+															onchange="previewImage()">
+													</div>
+												</div>
 										</div>
 										<div class="modal-footer">
 											<button type="submit" class="btn btn-primary" name="edit"><i
@@ -176,6 +204,54 @@ include 'header.php';
 									</div>
 								</div>
 							</div>
+
+							<!-- modal detail image -->
+							<div id="imgModal<?= $row["id_produk"]; ?>" class="modal fade" tabindex="-1">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 class="text-secondary">Detail Image</h4>
+											<button type="button" class="btn-close" data-dismiss="modal"
+												aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<img src="../image/<?= $row["foto"]; ?>" class="img-fluid" alt="Product Image">
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- end modal detail image -->
+
+							<!-- modal hapus data -->
+							<div id="deleteConfirm<?= $row["id_produk"]; ?>" class="modal fade">
+								<div class="modal-dialog modal-confirm">
+									<div class="modal-content">
+										<div class="modal-header flex-column">
+											<div class="icon-box">
+												<i class="material-icons">&#xE5CD;</i>
+											</div>
+											<h4 class="modal-title w-100">Are you sure?</h4>
+											<button type="button" class="close" data-dismiss="modal"
+												aria-hidden="true">&times;</button>
+										</div>
+										<div class="modal-body">
+											<p>Do you really want to delete these product? This process cannot be undone.
+											</p>
+										</div>
+										<div class="modal-footer justify-content-center">
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Cancel</button>
+											<button class="btn btn-danger">
+												<a href="hapus.php?id=<?= $row["id_produk"]; ?>"
+													class="text-light">Delete</a>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- end modal hapus data -->
+
+
 							<?php $i++; ?>
 						<?php endforeach; ?>
 						<!-- </tbody> -->
