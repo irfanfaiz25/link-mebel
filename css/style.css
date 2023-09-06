@@ -678,9 +678,18 @@ input:not(.radio) {
   padding: 30px;
   min-height: 280px;
 }
+
 .custom-card {
   margin: 20px;
   background: #705718;
+  height: 130px;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.custom-card-cart {
+  margin: 20px;
+  background: #40916c;
   height: 130px;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

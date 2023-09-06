@@ -423,173 +423,143 @@ include 'fungsi-index.php';
           <!-- Tab panes -->
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="home">
-              <div class="row">
-                <div class="col-sm-12 d-flex align-items-center">
+              <div class="longEnough mCustomScrollbar" data-mcs-theme="dark">
 
-                  <h6 style="font-size: 90%;">
-                    <div class="row justify-content-center">
-                      <div class="col-auto">
-                        <div class="table-responsive-md margin-table">
-                          <table id="tabel-cart" class="table table-hover">
-                            <thead class="thead-dark">
-                              <tr>
-                                <th class="ctr text-center">FOTO</th>
-                                <th class="ctr text-center">NAMA BARANG</th>
-                                <th class="ctr text-center">JUMLAH</th>
-                                <th class="ctr text-center"><i class="fa fa-pen-to-square"></i></th>
-                                <th class="ctr text-center">SUBTOTAL</th>
-                              </tr>
-                            </thead>
-                            <h4 style="margin-top: 50px;">
-                              <?php
-                              if (isset($_SESSION["user"])) {
-                                if ($cekCart == 0) {
-                                  $info = "Cart masih kosong !";
-                                  echo $info;
-                                }
-                                $totalSewa = $total["tot"];
-                              } else {
-                                $totalSewa = false;
-                              }
-
-                              if (!isset($_SESSION["login"])):
-                                $info2 = "Anda belum login !";
-                                echo $info2;
-                              else: ?>
-                              </h4>
-                              <?php foreach ($cart as $rowcart):
-                                $jmll = $rowcart["jml"];
-                                ?>
-                                <!-- <tbody> -->
-                                <tr class="text-center">
-                                  <td class="align-middle">
-                                    <img src="image/<?= $rowcart["foto"] ?>" alt="" width="50" height="53">
-                                  </td>
-                                  <td class="align-middle">
-                                    <?= $rowcart["nama"]; ?>
-                                  </td>
-                                  <td class="align-middle">
-                                    <?= $rowcart["jml"]; ?>
-                                  </td>
-                                  <td>
-                                    <a href="hapus_keranjang.php?id_cart=<?= $rowcart["id_cart"]; ?>"><button type="button"
-                                        class="btn btn-outline-secondary"><i class="fa fa-trash-can"></i>
-                                      </button></a>
-                                  </td>
-                                  <td class="align-middle">
-                                    <?= "IDR " . number_format($rowcart["sub"]); ?>
-                                  </td>
-                                </tr>
-                                <!-- </tbody> -->
-                              <?php endforeach; ?>
-                              <?php
-                              endif;
-                              ?>
-                          </table>
-                        </div>
-                        <div class="col-sm-12">
-                          <h5 style="float: right; color: #343a40; font-size: 25px;">
-                            Total
-                            <?=
-                              "IDR " . number_format($tot_sewa);
-                            ?>
-                          </h5>
-                        </div>
-                        <div class="col-sm-12">
-                          <button class="btn btn-success" data-toggle="modal" data-target="#modalCo"
-                            style="float: right; margin-top: 20px; padding-top: 12px; padding-bottom: 12px;">CHECKOUT
-                            <i class="fa fa-circle-check"></i></button>
-                        </div>
-
-                        <!-- checkout modals -->
-                        <div class="modal fade" id="modalCo" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-                          aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                                <p class="modal-title" id="modalLabel" style="font-size: 20px;">Checkout</p>
-                              </div>
-                              <div class="modal-body">
-                                <div class="row">
-                                  <form action="" method="post">
-                                    <div class="col-md-12">
-                                      <label for="nama_penerima">Nama Penerima</label>
-                                      <input type="text" id="nama_penerima" name="nama_penerima" class="form-control"
-                                        style="width: 498px;">
-
-                                      <label for="no_hp" class="label-data">No HP Penerima</label>
-                                      <input type="number" id="no_hp" name="no_hp" class="form-control"
-                                        style="width: 498px;">
-
-                                      <label for="alamat" class="label-data">Alamat Penerima</label>
-                                      <textarea type="text" id="alamat" name="alamat" class="form-control"></textarea>
-                                    </div>
-
-                                    <div class="col-md-12 payment">
-                                      <label for="payment">Pembayaran</label>
-                                      <div class="row pembayaran">
-
-                                        <div class="radio-inline">
-                                          <input class="radio" type="radio" name="pembayaran" id="pembayaran1"
-                                            value="dana">
-                                          <label for="pembayaran1">
-                                            <img src="image/payment-logo/dana.png" height="20" alt="payment-dana">
-                                          </label>
-                                        </div>
-
-                                        <div class="radio-inline">
-                                          <input class="radio" type="radio" name="pembayaran" id="pembayaran2"
-                                            value="ovo">
-                                          <label for="pembayaran2">
-                                            <img src="image/payment-logo/ovo.png" height="20" alt="payment-ovo">
-                                          </label>
-                                        </div>
-
-                                        <div class="radio-inline">
-                                          <input class="radio" type="radio" name="pembayaran" id="pembayaran3"
-                                            value="gopay">
-                                          <label for="pembayaran3">
-                                            <img src="image/payment-logo/gopay.png" height="20" width="80"
-                                              alt="payment-gopay">
-                                          </label>
-                                        </div>
-
-                                        <div class="radio-inline">
-                                          <input class="radio" type="radio" name="pembayaran" id="pembayaran4"
-                                            value="bca">
-                                          <label for="pembayaran4">
-                                            <img src="image/payment-logo/bca.png" height="20" alt="payment-bca">
-                                          </label>
-                                        </div>
-
-                                        <div class="radio-inline">
-                                          <input class="radio" type="radio" name="pembayaran" id="pembayaran5"
-                                            value="cod">
-                                          <label for="pembayaran5">
-                                            <img src="image/payment-logo/cod.png" height="20" alt="payment-cod">
-                                          </label>
-                                        </div>
-
-                                      </div>
-                                    </div>
-                                    <button class="btn btn-success" type="submit" name="rent"
-                                      style="float: right; margin-top: 20px; padding-top: 12px; padding-bottom: 12px;">CHECKOUT
-                                      <i class="fa fa-paper-plane"></i></button>
-                                  </form>
-                                </div>
-                              </div>
-                            </div>
+                <?php
+                if (isset($_SESSION["login"])):
+                  foreach ($cart as $data):
+                    ?>
+                    <div class="card custom-card-cart">
+                      <div class="custom-card-content">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <img src="image/<?= $data["foto"]; ?>" width="100" class="wait-image" alt="">
+                          </div>
+                          <div class="col-md-7 wait-field">
+                            <h5 style="font-size: 28px; margin-top: 0;">
+                              <?= $data["nama"]; ?>
+                            </h5>
+                            <h5 class="wait-field" style="padding-top: 0px;">
+                              Subtotal
+                            </h5>
+                            <h5 style="font-size: 20px;">
+                              IDR
+                              <?= number_format($data["sub"]); ?>
+                            </h5>
+                          </div>
+                          <div class="col-md-3 detail-card">
+                            <h5 class="field-modal" style="margin-top: 20px;">
+                              IDR
+                              <?= number_format($data["harga"]); ?>
+                            </h5>
+                            <h5 class="field-modal">
+                              <?= "Jumlah " . $data["jumlah"] . " Item"; ?>
+                            </h5>
+                            <a href="hapus_keranjang.php?id_cart=<?= $data["id_cart"]; ?>" class="btn btn-danger btn-sm">
+                              <i class="fa fa-trash"></i></a>
                           </div>
                         </div>
-
                       </div>
                     </div>
-                  </h6>
+
+                    <?php
+                  endforeach;
+                endif;
+                ?>
+
+              </div>
+
+              <div class="col-sm-12">
+                <h5 style="float: right; color: #343a40; font-size: 25px;">
+                  Total
+                  <?=
+                    "IDR " . number_format($tot_sewa);
+                  ?>
+                </h5>
+              </div>
+              <div class="col-sm-12">
+                <button class="btn btn-success" data-toggle="modal" data-target="#modalCo"
+                  style="float: right; margin-top: 20px; padding-top: 12px; padding-bottom: 12px;">CHECKOUT
+                  <i class="fa fa-circle-check"></i></button>
+              </div>
+
+              <!-- checkout modals -->
+              <div class="modal fade" id="modalCo" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <p class="modal-title" id="modalLabel" style="font-size: 20px;">Checkout</p>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <form action="" method="post">
+                          <div class="col-md-12">
+                            <label for="nama_penerima">Nama Penerima</label>
+                            <input type="text" id="nama_penerima" name="nama_penerima" class="form-control"
+                              style="width: 498px;">
+
+                            <label for="no_hp" class="label-data">No HP Penerima</label>
+                            <input type="number" id="no_hp" name="no_hp" class="form-control" style="width: 498px;">
+
+                            <label for="alamat" class="label-data">Alamat Penerima</label>
+                            <textarea type="text" id="alamat" name="alamat" class="form-control"></textarea>
+                          </div>
+
+                          <div class="col-md-12 payment">
+                            <label for="payment">Pembayaran</label>
+                            <div class="row pembayaran">
+
+                              <div class="radio-inline">
+                                <input class="radio" type="radio" name="pembayaran" id="pembayaran1" value="dana">
+                                <label for="pembayaran1">
+                                  <img src="image/payment-logo/dana.png" height="20" alt="payment-dana">
+                                </label>
+                              </div>
+
+                              <div class="radio-inline">
+                                <input class="radio" type="radio" name="pembayaran" id="pembayaran2" value="ovo">
+                                <label for="pembayaran2">
+                                  <img src="image/payment-logo/ovo.png" height="20" alt="payment-ovo">
+                                </label>
+                              </div>
+
+                              <div class="radio-inline">
+                                <input class="radio" type="radio" name="pembayaran" id="pembayaran3" value="gopay">
+                                <label for="pembayaran3">
+                                  <img src="image/payment-logo/gopay.png" height="20" width="80" alt="payment-gopay">
+                                </label>
+                              </div>
+
+                              <div class="radio-inline">
+                                <input class="radio" type="radio" name="pembayaran" id="pembayaran4" value="bca">
+                                <label for="pembayaran4">
+                                  <img src="image/payment-logo/bca.png" height="20" alt="payment-bca">
+                                </label>
+                              </div>
+
+                              <div class="radio-inline">
+                                <input class="radio" type="radio" name="pembayaran" id="pembayaran5" value="cod">
+                                <label for="pembayaran5">
+                                  <img src="image/payment-logo/cod.png" height="20" alt="payment-cod">
+                                </label>
+                              </div>
+
+                            </div>
+                          </div>
+                          <button class="btn btn-success" type="submit" name="rent"
+                            style="float: right; margin-top: 20px; padding-top: 12px; padding-bottom: 12px;">CHECKOUT
+                            <i class="fa fa-paper-plane"></i></button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+
             </div>
 
             <!-- tab payment order -->

@@ -73,7 +73,7 @@ if (isset($_POST["cart"])) {
 if (isset($_SESSION["user"])) {
     $userId = $_SESSION["user"];
 
-    $cart = query("SELECT id_cart, nama, ket, foto, jumlah, harga*jumlah AS sub, SUM(jumlah) AS jml FROM cart WHERE id_user = $userId GROUP BY nama");
+    $cart = query("SELECT id_cart, nama, ket, foto, jumlah, harga, harga*jumlah AS sub, SUM(jumlah) AS jml FROM cart WHERE id_user = $userId GROUP BY nama");
     $cekCart = count(query("SELECT * FROM cart WHERE id_user = $userId"));
     $tot = mysqli_query($konek, "SELECT SUM(harga*jumlah) AS tot FROM cart WHERE id_user = $userId");
     $total = mysqli_fetch_assoc($tot);
