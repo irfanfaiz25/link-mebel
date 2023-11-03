@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 06, 2023 at 10:15 AM
+-- Generation Time: Nov 03, 2023 at 01:36 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -43,7 +43,8 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`id_cart`, `id_user`, `id_produk`, `nama`, `harga`, `ket`, `foto`, `jumlah`) VALUES
-(140, 8, 29, 'Chamilo', 450000, '', '64d77f51f1c6d.png', 2);
+(140, 8, 29, 'Chamilo', 450000, '', '64d77f51f1c6d.png', 2),
+(141, 2, 28, 'Cocoo', 520000, '', '64d77f01c0f11.png', 1);
 
 -- --------------------------------------------------------
 
@@ -112,13 +113,12 @@ INSERT INTO `transaksi_item` (`no_trans`, `id_user`, `id_produk`, `nama`, `harga
 ('TR230003', 2, 28, 'Cocoo', 520000, 1, '1m yak', '64d77f01c0f11.png', '2023-08-18 05:46:51', 'david nur', '087632462378', 'Karanganyar, Jawa Tengah, Indonesia', 'bca', 'done', 'TR230003.jpeg', '', 'JT0974749846', 'J&T', '2023-08-20 07:52:33'),
 ('TR230003', 2, 2, 'Salma', 460000, 2, '2m yak', '64d7760c74326.png', '2023-08-18 05:46:51', 'david nur', '087632462378', 'Karanganyar, Jawa Tengah, Indonesia', 'bca', 'done', 'TR230003.jpeg', '', 'JT0974749846', 'J&T', '2023-08-20 07:52:33'),
 ('TR230004', 2, 29, 'Chamilo', 450000, 2, 'jangan ketinggian', '64d77f51f1c6d.png', '2023-08-18 05:53:22', 'Surya adi', '08534632788', 'Makamhaji, manang, sukoharjo, solo, jawa tengah', 'bca', 'on delivery', 'TR230004_2023-08-18 06:28:53.png', 'rekening salah', '0039425872', 'AnterAja', ''),
-('TR230005', 3, 28, 'Cocoo', 520000, 2, '2m yak', '64d77f01c0f11.png', '2023-08-18 13:23:53', 'Nicho dewa', '087634738979', 'Mojolaban, Karanganyar, jawa tengah', 'ovo', 'on process', 'TR230005_2023-08-18 13.26.27.png', '', '', '', ''),
-('TR230005', 3, 1, 'Zaabar', 400000, 3, '3m yak', '64d4911b6354c.png', '2023-08-18 13:23:53', 'Nicho dewa', '087634738979', 'Mojolaban, Karanganyar, jawa tengah', 'ovo', 'on process', 'TR230005_2023-08-18 13.26.27.png', '', '', '', ''),
+('TR230005', 3, 28, 'Cocoo', 520000, 2, '2m yak', '64d77f01c0f11.png', '2023-08-18 13:23:53', 'Nicho dewa', '087634738979', 'Mojolaban, Karanganyar, jawa tengah', 'ovo', 'on delivery', 'TR230005_2023-08-18 13.26.27.png', '', '002321434', 'Si Cepat', ''),
+('TR230005', 3, 1, 'Zaabar', 400000, 3, '3m yak', '64d4911b6354c.png', '2023-08-18 13:23:53', 'Nicho dewa', '087634738979', 'Mojolaban, Karanganyar, jawa tengah', 'ovo', 'on delivery', 'TR230005_2023-08-18 13.26.27.png', '', '002321434', 'Si Cepat', ''),
 ('TR230006', 2, 28, 'Cocoo', 520000, 2, 'ukuran2', '64d77f01c0f11.png', '2023-08-20 21:02:44', 'irfan faiz', '083865050949', 'simo', 'bca', 'on process', 'TR230006_2023-08-20 21.03.10.png', '', '', '', ''),
 ('TR230007', 2, 28, 'Cocoo', 520000, 2, 'ukuran 2', '64d77f01c0f11.png', '2023-08-21 10:27:19', 'dapid', '083865050949', 'karanganyar', 'bca', 'on process', 'TR230007_2023-08-21 10.27.44.png', '', '', '', ''),
 ('TR230008', 2, 28, 'Cocoo', 520000, 2, 'Kaki 2m', '64d77f01c0f11.png', '2023-08-22 08:06:34', 'Selvi', '083865050949', 'Titang, Simo, Boyolali', 'ovo', 'on process', 'TR230008_2023-08-29 09.23.37.png', '', '', '', ''),
 ('TR230008', 2, 2, 'Salma', 460000, 1, 'Warna merah', '64d7760c74326.png', '2023-08-22 08:06:34', 'Selvi', '083865050949', 'Titang, Simo, Boyolali', 'ovo', 'on process', 'TR230008_2023-08-29 09.23.37.png', '', '', '', ''),
-('TR230009', 2, 27, 'Daya Solid Stool', 470000, 2, '', '64d77ed01b9bb.png', '2023-08-29 14:52:17', 'irfan faiz', '087353453453', 'sanggrahan pelem simo', 'bca', 'waiting for payment', '', '', '', '', ''),
 ('TR230010', 7, 1, 'Sawda', 400000, 2, '', '64e6211fdde48.png', '2023-08-30 08:16:39', 'irfan faiz', '083865050949', 'simo, boyolali, jawa tengah, indonesia', 'ovo', 'payment confirmation', 'TR230010_2023-08-30 08.17.06.png', '', '', '', ''),
 ('TR230010', 7, 28, 'Cocoo', 520000, 2, '', '64d77f01c0f11.png', '2023-08-30 08:16:39', 'irfan faiz', '083865050949', 'simo, boyolali, jawa tengah, indonesia', 'ovo', 'payment confirmation', 'TR230010_2023-08-30 08.17.06.png', '', '', '', ''),
 ('TR230011', 7, 29, 'Chamilo', 450000, 1, '', '64d77f51f1c6d.png', '2023-08-30 11:32:49', 'Akbar Pranowo', '083865050949', 'Jepara,  jawa tengah, indonesia', 'dana', 'payment confirmation', 'TR230011_2023-08-30 11.33.56.png', '', '', '', ''),
@@ -130,7 +130,6 @@ INSERT INTO `transaksi_item` (`no_trans`, `id_user`, `id_produk`, `nama`, `harga
 ('TR230013', 8, 29, 'Chamilo', 450000, 1, '', '64d77f51f1c6d.png', '2023-09-06 14:05:22', 'Surya Adi', '08764376828', 'Pajang, Makamhaji, Sukoharjo, Jawa Tengah', 'gopay', 'payment confirmation', 'TR230013_2023-09-06 14.06.00.jpeg', '', '', '', ''),
 ('TR230014', 8, 1, 'Sawda', 400000, 2, '', '64e6211fdde48.png', '2023-09-06 14:15:23', 'Nicholas', '083865050949', 'Karangpandan, Karanganyar, Jawa Tengah', 'ovo', 'payment confirmation', 'TR230014_2023-09-06 14.15.35.png', '', '', '', ''),
 ('TR230014', 8, 26, 'Baariz', 450000, 3, '', '64e6216119db1.png', '2023-09-06 14:15:23', 'Nicholas', '083865050949', 'Karangpandan, Karanganyar, Jawa Tengah', 'ovo', 'payment confirmation', 'TR230014_2023-09-06 14.15.35.png', '', '', '', ''),
-('TR230015', 8, 27, 'Daya Solid Stool', 470000, 1, '', '64d77ed01b9bb.png', '2023-09-06 14:16:29', 'irfan faiz', '083865050949', 'simo', 'bca', 'payment confirmation', 'TR230015_2023-09-06 14.16.50.png', '', '', '', ''),
 ('TR230016', 8, 2, 'Salma', 460000, 2, '', '64d7760c74326.png', '2023-09-06 15:13:08', 'Tito arigato', '08658478290', 'Wonosobo, Jawa Tengah', 'dana', 'waiting for payment', '', '', '', '', ''),
 ('TR230016', 8, 27, 'Daya Solid Stool', 470000, 2, '', '64d77ed01b9bb.png', '2023-09-06 15:13:08', 'Tito arigato', '08658478290', 'Wonosobo, Jawa Tengah', 'dana', 'waiting for payment', '', '', '', '', '');
 
@@ -191,7 +190,10 @@ INSERT INTO `user_log` (`id`, `id_user`, `nama`, `level_user`, `ip`, `device`, `
 (0, 2, 'irfan faiz', '', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', '2023-09-05 08:05:15'),
 (0, 7, '', '', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', '2023-09-06 11:32:17'),
 (0, 2, '', '', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', '2023-09-06 13:57:27'),
-(0, 8, '', '', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', '2023-09-06 14:03:54');
+(0, 8, '', '', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', '2023-09-06 14:03:54'),
+(0, 2, '', '', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36', '2023-09-08 10:38:16'),
+(0, 2, '', '', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36', '2023-10-19 20:26:55'),
+(0, 2, '', '', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36', '2023-10-19 20:27:44');
 
 --
 -- Indexes for dumped tables
@@ -229,7 +231,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id_cart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id_cart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- AUTO_INCREMENT for table `tb_produk`
