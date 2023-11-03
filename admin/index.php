@@ -108,7 +108,7 @@ include 'header.php';
         </div>
         <div class="col-md-3">
             <div class="card side-card">
-                <div class="card-body ms-3">
+                <div class="card-body ms-1">
                     <h2 class="mb-4">New Product</h2>
                     <?php
                     foreach ($new_product as $row):
