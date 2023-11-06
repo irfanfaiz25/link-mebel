@@ -29,8 +29,13 @@ if (isset($_POST["login"])) {
       $sql = "INSERT IGNORE INTO user_log VALUES ('','$id_user','$nama','$level','$ip','$device',now())";
       $result = mysqli_query($konek, $sql);
 
-      header("Location: index.php");
-      exit;
+      if ($level == "admin") {
+        header("Location: admin/index.php");
+        exit;
+      } else {
+        header("Location: index.php");
+        exit;
+      }
     }
   }
   $error = true;
